@@ -8,7 +8,7 @@ Weather, Security and Energy product baseline :
 
 [Official Netatmo documentation](https://dev.netatmo.com/)
 
-Aircare or HomeCoach product baseline :
+Aircare (Healthy HomeCoach) product baseline :
 
 [Netatmo Aircare API Documentation](https://dev.netatmo.com/apidocumentation/aircare)
 
