@@ -4,6 +4,15 @@ Pharo Netatmo API implementation for Legrand Netatmo products.
 
 You cannnot access data directly from the devices : it is not possible for the moment. The only way to access the data and the devices is via the Netatmo Cloud.
 
+## Installing
+
+```smalltalk
+Metacello new
+   baseline: 'PharoNetatmoAPI';
+   repository: 'github://labordep/PharoNetatmoAPI';
+   load.
+```
+
 ## Prerequisites
 
 1 - Create an application access with your Netatmo connect account
