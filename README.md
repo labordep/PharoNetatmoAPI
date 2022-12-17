@@ -20,12 +20,20 @@ Using Netatmo Connect APIs you will have access to very sensitive information. T
 
 [Netatmo Connect APIs Terms of Use](https://dev.netatmo.com/legal) 
 
-## Legrand Netatmo references and documentations
+## Legrand Netatmo API documentation
 
-Weather, Security and Energy product baseline :
+This ressources are my reference to implement this API.
+There are two API product groups : Weather/Security/Energy and HomeCoach/Aircare.
 
-[Official Netatmo documentation](https://dev.netatmo.com/)
+### Weather, Security and Energy products
 
-Aircare (Healthy HomeCoach) product baseline :
+[General Netatmo documentation](https://dev.netatmo.com/)
+
+More specific produtcs API :
+- Weather product : [Weather API Documentation](https://dev.netatmo.com/apidocumentation/weather)
+- Energy product : [Energy API Documentation](https://dev.netatmo.com/apidocumentation/energy)
+- Security : [Home + Security API Documentation](https://dev.netatmo.com/apidocumentation/security)
+
+### Healthy HomeCoach / Aircare product
 
 [Netatmo Aircare API Documentation](https://dev.netatmo.com/apidocumentation/aircare)
