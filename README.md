@@ -4,9 +4,13 @@ Pharo Netatmo API implementation for Legrand Netatmo products.
 
 ## Prerequisites
 
-### Create an application access with your Netatmo connect account
+1 - Create an application access with your Netatmo connect account
 
 For more details [see the official guidelines](https://dev.netatmo.com/guideline).
+
+2 - Create an access token
+
+For more details [see the official security documentation](https://dev.netatmo.com/apidocumentation/oauth)
 
 ## Legrand Netatmo references and documentations
 
