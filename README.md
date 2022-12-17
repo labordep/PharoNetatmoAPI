@@ -1,4 +1,4 @@
-# PharoNetatmoAPI
+# Pharo Netatmo API
 
 Pharo Netatmo API implementation for Legrand Netatmo products.
 
