@@ -12,6 +12,12 @@ For more details [see the official guidelines](https://dev.netatmo.com/guideline
 
 For more details [see the official security documentation](https://dev.netatmo.com/apidocumentation/oauth)
 
+## Legals and privacy
+
+Using Netatmo Connect APIs you will have access to very sensitive information. This is particularly true if your app accesses our Cameras (live stream or videos). Make sure you respect user's privacy and have a strong privacy policy.
+
+[Netatmo Connect APIs Terms of Use](https://dev.netatmo.com/legal) 
+
 ## Legrand Netatmo references and documentations
 
 Weather, Security and Energy product baseline :
@@ -21,7 +27,3 @@ Weather, Security and Energy product baseline :
 Aircare (Healthy HomeCoach) product baseline :
 
 [Netatmo Aircare API Documentation](https://dev.netatmo.com/apidocumentation/aircare)
-
-APIs Terms of Use :
-
-[Netatmo Connect APIs Terms of Use](https://dev.netatmo.com/legal) 
