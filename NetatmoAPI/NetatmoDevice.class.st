@@ -21,6 +21,14 @@ NetatmoDevice class >> type [
 	self subclassResponsibility  
 ]
 
+{ #category : #constructor }
+NetatmoDevice class >> type: aType [
+
+	aType ifNil:[ ^nil ].
+	self allSubclassesDo: [ :class | class type = aType ifTrue: [ ^ class new ] ].
+	^ nil
+]
+
 { #category : #accessing }
 NetatmoDevice >> firmware [
 
@@ -49,7 +57,13 @@ NetatmoDevice >> id: anObject [
 NetatmoDevice >> initialize [ 
 	
 	super initialize.
-	self type: self class type.
+	type := self class type.
+]
+
+{ #category : #testing }
+NetatmoDevice >> isHealthyHomeCoach [
+
+	^ false
 ]
 
 { #category : #accessing }
@@ -62,6 +76,12 @@ NetatmoDevice >> isReachable [
 NetatmoDevice >> isReachable: anObject [
 
 	isReachable := anObject
+]
+
+{ #category : #testing }
+NetatmoDevice >> isStation [
+
+	^ false
 ]
 
 { #category : #accessing }

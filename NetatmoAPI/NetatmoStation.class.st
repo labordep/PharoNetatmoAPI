@@ -14,3 +14,9 @@ NetatmoStation class >> type [
 
 	^'NAMain'
 ]
+
+{ #category : #testing }
+NetatmoStation >> isStation [
+
+	^ true
+]

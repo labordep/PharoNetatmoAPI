@@ -23,9 +23,20 @@ NetatmoAPI >> apiUrl: anObject [
 
 { #category : #private }
 NetatmoAPI >> buildDevices: aDictionary [
-
-	self flag:'todo'.
-	^OrderedCollection new
+	| devices rawBody rawDevices |
+	
+	devices := OrderedCollection new.
+	rawBody := aDictionary at: #body ifAbsent:[ ^devices ].
+	rawDevices := rawBody at: #devices ifAbsent:[ ^devices ].
+	
+	rawDevices do:[ :rawDevice | | device |
+		device := NetatmoDevice type: (rawDevice at: #type ifAbsent:[nil]).
+		device ifNotNil:[
+			devices add: device.	
+		].
+	].
+	
+	^devices
 ]
 
 { #category : #private }

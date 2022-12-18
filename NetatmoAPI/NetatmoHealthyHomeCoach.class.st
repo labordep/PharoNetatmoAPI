@@ -14,3 +14,9 @@ NetatmoHealthyHomeCoach class >> type [
 
 	^'NHC'
 ]
+
+{ #category : #testing }
+NetatmoHealthyHomeCoach >> isHealthyHomeCoach [
+
+	^ true
+]
