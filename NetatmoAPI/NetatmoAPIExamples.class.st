@@ -59,6 +59,16 @@ NetatmoAPIExamples class >> exampleGetHomeCoachsData [
 	^result
 ]
 
+{ #category : #'high level examples' }
+NetatmoAPIExamples class >> exampleGetHomeCoachsDataModel [
+	<script: 'self exampleGetHomeCoachsDataModel inspect'>
+	
+	| raw |
+	raw := self exampleGetHomeCoachsData. 
+
+	raw
+]
+
 { #category : #'low level examples' }
 NetatmoAPIExamples class >> exampleGetHomeCoachsDataWithDeviceId [
 	<script:'self exampleGetHomeCoachsDataWithDeviceId inspect'>
