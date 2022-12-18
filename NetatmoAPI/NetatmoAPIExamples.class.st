@@ -52,7 +52,6 @@ NetatmoAPIExamples class >> exampleGetHomeCoachsData [
 	
 	result := ZnClient new 
 		url: 'https://api.netatmo.com/api/gethomecoachsdata'; 
-		queryAt: 'device_id' put: self homeCoachMacAddress;
 		forJsonREST;
 		setBearerAuthentication: self token; 
 		get.
@@ -67,6 +66,7 @@ NetatmoAPIExamples class >> exampleGetHomeCoachsDataWithDeviceId [
 	
 	result := ZnClient new 
 		url: 'https://api.netatmo.com/api/gethomecoachsdata'; 
+		queryAt: 'device_id' put: self homeCoachMacAddress;
 		forJsonREST;
 		setBearerAuthentication: self token; 
 		get.
@@ -113,7 +113,7 @@ NetatmoAPIExamples class >> exampleGetStationMeasureModel [
 		measures add: m.
 	].
 
-	measures inspect
+	measures
 ]
 
 { #category : #'low level examples' }
