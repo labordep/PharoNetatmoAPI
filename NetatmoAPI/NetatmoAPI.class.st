@@ -66,8 +66,8 @@ NetatmoAPI >> checkIfError: aDictionary [
 ]
 
 { #category : #api }
-NetatmoAPI >> getSmartHomeWeatherStations [
-
+NetatmoAPI >> getHealthyHomeCoachDevices [
+		
 	| result |
 	result := znClient 
 		url: self apiUrl asString, '/getstationsdata';

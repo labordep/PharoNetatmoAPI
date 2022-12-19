@@ -239,14 +239,14 @@ NetatmoAPITest >> testConnexionErrors [
 	api := NetatmoAPI new.
 	error := nil.
 
-	[api getSmartHomeWeatherStations] onErrorDo:[ :e | error := e].
+	[api getHealthyHomeCoachDevices] onErrorDo:[ :e | error := e].
 	self assert: (error isKindOf: NetatmoMissingAccessTokenError).
 	
 	api token: 'badtoken'.
-	[api getSmartHomeWeatherStations] onErrorDo:[ :e | error := e].
+	[api getHealthyHomeCoachDevices] onErrorDo:[ :e | error := e].
 	self assert: (error isKindOf: NetatmoInvalidAccessTokenError).
 	
 	api apiUrl: nil.
-	[api getSmartHomeWeatherStations] onErrorDo:[ :e | error := e].
+	[api getHealthyHomeCoachDevices] onErrorDo:[ :e | error := e].
 	self assert: (error isKindOf: STONReaderError).
 ]
