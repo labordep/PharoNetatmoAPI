@@ -35,13 +35,20 @@ api token: 'yourAccess|tokenHere'
 
 Use "api" category methods to request datas.
 
-### Get Healthy Home Coach Devices
+### Get Healthy Home Coach datas
 
-Return list of ```NetatmoHealthyHomeCoach``` devices.
+Get all device, return a list of ```NetatmoHealthyHomeCoach``` devices.
 
 ```smalltalk
 | devices |
 devices := api getHealthyHomeCoachDevices.
+```
+
+Get specific device from mac address (id), return a list of ```NetatmoHealthyHomeCoach``` devices.
+
+```smalltalk
+| devices |
+devices := api getHealthyHomeCoachDevice: '01:23:45:67:89:ab'.
 ```
 
 ## Legals and privacy
