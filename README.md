@@ -25,7 +25,24 @@ For more details [see the official security documentation](https://dev.netatmo.c
 
 ## How to use
 
-Incoming...
+Instanciante ```NetatmoAPI``` to have to request datas from the API. Use a token to setup the connection.
+
+```smalltalk
+| api |
+api := NetatmoAPI new.
+api token: 'yourAccess|tokenHere'
+```
+
+Use "api" category methods to request datas.
+
+### Get Healthy Home Coach Devices
+
+Return list of ```NetatmoHealthyHomeCoach``` devices.
+
+```smalltalk
+| devices |
+devices := api getHealthyHomeCoachDevices.
+```
 
 ## Legals and privacy
 
