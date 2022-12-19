@@ -2,7 +2,7 @@
 
 Pharo Netatmo API implementation for Legrand Netatmo products.
 
-You cannot access data directly from the devices : it is not possible for the moment. The only way to access the data and the devices is via the Netatmo Cloud.
+You cannot access data directly from the devices : it is not possible for the moment. The only way to access the data and the devices is via the Netatmo Cloud. You need to be connected to get datas.
 
 ## Installing
 
@@ -22,6 +22,10 @@ For more details [see the official guidelines](https://dev.netatmo.com/guideline
 2 - Create an access token
 
 For more details [see the official security documentation](https://dev.netatmo.com/apidocumentation/oauth)
+
+## How to use
+
+Incoming...
 
 ## Legals and privacy
 
