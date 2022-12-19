@@ -72,7 +72,7 @@ NetatmoAPI >> getHealthyHomeCoachDevice: anId [
 	
 	anId ifNil:[^ NetatmoDeviceNotFoundError signal].
 	result := znClient 
-		url: self apiUrl asString, '/getstationsdata';
+		url: self apiUrl asString, '/gethomecoachsdata';
 		queryAt: 'device_id' put: anId asString;
 		forJsonREST;
 		setBearerAuthentication: self token; 
@@ -85,6 +85,39 @@ NetatmoAPI >> getHealthyHomeCoachDevice: anId [
 
 { #category : #api }
 NetatmoAPI >> getHealthyHomeCoachDevices [
+	| result |
+	
+	result := znClient 
+		url: self apiUrl asString, '/gethomecoachsdata';
+		forJsonREST;
+		setBearerAuthentication: self token; 
+		get.
+	
+	(self checkIfError: result) ifNotNil:[ :error | ^ error signal ].
+	
+	^ self buildDevices: result
+]
+
+{ #category : #api }
+NetatmoAPI >> getStationDevice: anId [
+	"Id is the mac address of the device"
+	| result |
+	
+	anId ifNil:[^ NetatmoDeviceNotFoundError signal].
+	result := znClient 
+		url: self apiUrl asString, '/getstationsdata';
+		queryAt: 'device_id' put: anId asString;
+		forJsonREST;
+		setBearerAuthentication: self token; 
+		get.
+	
+	(self checkIfError: result) ifNotNil:[ :error | ^ error signal ].
+	
+	^ self buildDevices: result
+]
+
+{ #category : #api }
+NetatmoAPI >> getStationDevices [
 	| result |
 	
 	result := znClient 

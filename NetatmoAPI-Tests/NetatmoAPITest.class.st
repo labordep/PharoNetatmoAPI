@@ -35,6 +35,78 @@ NetatmoAPITest class >> sampleError9ResponseJSON [
 ]
 
 { #category : #'official samples - data' }
+NetatmoAPITest class >> sampleGetHealthyHomeCoachsDataResponseJSON [
+	<script: 'self sampleGetHealthyHomeCoachsDataResponseJSON inspect'>
+
+	^STONJSON fromString:
+'
+{
+"body":{
+"devices":[
+{
+"_id":"70:ee:50:22:a3:00",
+"date_setup":1513707043,
+"last_setup":1513707043,
+"type":"NHC",
+"last_status_store":1555677748,
+"module_name":"string",
+"firmware":45,
+"last_upgrade":0,
+"wifi_status":22,
+"reachable":true,
+"co2_calibrating":false,
+"station_name":"Bedroom",
+"data_type":[
+"Temperature, CO2, Humidity, Noise, Pressure, health_idx"
+],
+"place":{
+"altitude":45,
+"city":"Boulogne-billancourt",
+"country":"string",
+"timezone":"Europe/Paris",
+"location":[
+"30.89600807058707, 29.94281464724796"
+]
+},
+"dashboard_data":{
+"time_utc":1555677739,
+"Temperature":23.7,
+"CO2":967,
+"Humidity":41,
+"Noise":42,
+"Pressure":45,
+"AbsolutePressure":1022.9,
+"health_idx":1,
+"min_temp":21.2,
+"max_temp":27.4,
+"date_max_temp":1555662436,
+"date_min_temp":1555631374
+},
+"name":"Bedroom Baby",
+"read_only":true
+}
+],
+"user":{
+"mail":"name@mail.com",
+"administrative":{
+"lang":"fr-FR",
+"reg_locale":"fr-FR",
+"country":"FR",
+"unit":"GB",
+"windunit":1,
+"pressureunit":0,
+"feel_like_algo":0
+}
+}
+},
+"status":"ok",
+"time_exec":"0.060059070587158",
+"time_server":"1553777827"
+}
+'
+]
+
+{ #category : #'official samples - data' }
 NetatmoAPITest class >> sampleGetStationsDataResponseJSON [
 	<script: 'self sampleGetStationsDataResponseJSON inspect'>
 
@@ -217,7 +289,29 @@ NetatmoAPITest class >> sampleGetStationsDataResponseJSON [
 ]
 
 { #category : #test }
-NetatmoAPITest >> testBuildDevices [
+NetatmoAPITest >> testBuildHealthyHomeCoachsDevices [
+
+	| api devices device |
+	api := NetatmoAPI new.
+	
+	devices := api buildDevices: self class sampleGetHealthyHomeCoachsDataResponseJSON.
+	self assert: devices size equals: 1.
+	
+	device := devices first.
+	self assert: device isHealthyHomeCoach.
+	self assert: device id equals: '70:ee:50:22:a3:00'.
+	self assert: device firmware equals: 45.
+	self assert: device isReachable.
+	self assert: device name equals: 'string'.
+	self assert: device lastSetupDateTime equals: (DateAndTime fromUnixTime: 1513707043).
+	self assert: device lastStatusStoreDateTime equals: (DateAndTime fromUnixTime: 1555677748).
+	self assert: device lastUpgradeDateTime equals: (DateAndTime fromUnixTime: 0).
+	self assert: device setupDateTime equals: (DateAndTime fromUnixTime: 1513707043).
+	self assert: device wifiStatus equals: 22.
+]
+
+{ #category : #test }
+NetatmoAPITest >> testBuildStationDevices [
 
 	| api devices device |
 	api := NetatmoAPI new.
