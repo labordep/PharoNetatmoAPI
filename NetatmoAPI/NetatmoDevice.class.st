@@ -3,6 +3,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'id',
+		'name',
 		'setupDateTime',
 		'lastSetupDateTime',
 		'type',
@@ -31,6 +32,7 @@ NetatmoDevice class >> type: aType [
 
 { #category : #accessing }
 NetatmoDevice >> firmware [
+	"version of the software"
 
 	^ firmware
 ]
@@ -43,7 +45,8 @@ NetatmoDevice >> firmware: anObject [
 
 { #category : #accessing }
 NetatmoDevice >> id [
-
+	"mac address of the device"
+	
 	^ id
 ]
 
@@ -58,6 +61,7 @@ NetatmoDevice >> initialize [
 	
 	super initialize.
 	type := self class type.
+	isReachable := false.
 ]
 
 { #category : #testing }
@@ -68,6 +72,7 @@ NetatmoDevice >> isHealthyHomeCoach [
 
 { #category : #accessing }
 NetatmoDevice >> isReachable [
+	"true if the station connected to Netatmo cloud within the last 4 hours"
 
 	^ isReachable
 ]
@@ -121,6 +126,19 @@ NetatmoDevice >> lastUpgradeDateTime: anObject [
 ]
 
 { #category : #accessing }
+NetatmoDevice >> name [
+	"name of the module"
+	
+	^ name
+]
+
+{ #category : #accessing }
+NetatmoDevice >> name: anObject [
+
+	name := anObject
+]
+
+{ #category : #accessing }
 NetatmoDevice >> setupDateTime [
 
 	^ setupDateTime
@@ -140,6 +158,7 @@ NetatmoDevice >> type [
 
 { #category : #accessing }
 NetatmoDevice >> wifiStatus [
+	"wifi status per Base station. (86=bad, 56=good)"
 
 	^ wifiStatus
 ]

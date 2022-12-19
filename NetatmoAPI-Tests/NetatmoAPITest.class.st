@@ -211,8 +211,16 @@ NetatmoAPITest >> testBuildDevices [
 	self assert: devices size equals: 1.
 	
 	device := devices first.
-	self assert: device type equals: NetatmoStation type.
-	self assert: (device isKindOf: NetatmoStation).
+	self assert: device isStation.
+	self assert: device id equals: '70:ee:50:22:a3:00'.
+	self assert: device firmware equals: 137.
+	self assert: device isReachable.
+	self assert: device name equals: 'Indoor'.
+	self assert: device lastSetupDateTime equals: (DateAndTime fromUnixTime: 1435834348).
+	self assert: device lastStatusStoreDateTime equals: (DateAndTime fromUnixTime: 1555677748).
+	self assert: device lastUpgradeDateTime equals: (DateAndTime fromUnixTime: 1512405614).
+	self assert: device setupDateTime equals: (DateAndTime fromUnixTime: 1435834348).
+	self assert: device wifiStatus equals: 55.
 ]
 
 { #category : #test }

@@ -32,6 +32,17 @@ NetatmoAPI >> buildDevices: aDictionary [
 	rawDevices do:[ :rawDevice | | device |
 		device := NetatmoDevice type: (rawDevice at: #type ifAbsent:[nil]).
 		device ifNotNil:[
+			
+			device id: (rawDevice at: '_id' ifPresent:[ :e | e asString ] ifAbsent:[ nil ]).
+			device setupDateTime: (rawDevice at: 'date_setup' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ nil ]).
+			device lastSetupDateTime: (rawDevice at: 'last_setup' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ nil ]).
+			device lastStatusStoreDateTime: (rawDevice at: 'last_status_store' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ nil ]).
+			device name: (rawDevice at: 'module_name' ifPresent:[ :e | e asString ] ifAbsent:[ nil ]).
+			device firmware: (rawDevice at: 'firmware' ifPresent:[ :e | e asNumber ] ifAbsent:[ nil ]).
+			device lastUpgradeDateTime: (rawDevice at: 'last_upgrade' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ nil ]).
+			device wifiStatus: (rawDevice at: 'wifi_status' ifPresent:[ :e | e asNumber ] ifAbsent:[ nil ]).
+			device isReachable: (rawDevice at: 'reachable' ifPresent:[ :e | e ] ifAbsent:[ nil ]).
+			
 			devices add: device.	
 		].
 	].
