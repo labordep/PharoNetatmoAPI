@@ -35,6 +35,22 @@ api token: 'yourAccess|tokenHere'
 
 Use "api" category methods to request datas.
 
+### Get Weather station datas
+
+Get all device, return a list of ```NetatmoStation``` devices.
+
+```smalltalk
+| devices |
+devices := api getStationDevices.
+```
+
+Get specific device from mac address (id), return a list of ```NetatmoStation``` devices.
+
+```smalltalk
+| devices |
+devices := api getStationDevice:: '01:23:45:67:89:ab'.
+```
+
 ### Get Healthy Home Coach datas
 
 Get all device, return a list of ```NetatmoHealthyHomeCoach``` devices.
