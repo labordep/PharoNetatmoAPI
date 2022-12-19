@@ -25,7 +25,7 @@ NetatmoAPIExamples class >> exampleGetHomeCoachMeasure [
 	^result
 ]
 
-{ #category : #'high level examples' }
+{ #category : #'medium level examples' }
 NetatmoAPIExamples class >> exampleGetHomeCoachMeasureModel [
 	<script: 'self exampleGetHomeCoachMeasureModel inspect'>
 	
@@ -59,7 +59,7 @@ NetatmoAPIExamples class >> exampleGetHomeCoachsData [
 	^result
 ]
 
-{ #category : #'high level examples' }
+{ #category : #'medium level examples' }
 NetatmoAPIExamples class >> exampleGetHomeCoachsDataModel [
 	<script: 'self exampleGetHomeCoachsDataModel inspect'>
 	
@@ -106,7 +106,7 @@ NetatmoAPIExamples class >> exampleGetStationMeasure [
 	^result
 ]
 
-{ #category : #'high level examples' }
+{ #category : #'medium level examples' }
 NetatmoAPIExamples class >> exampleGetStationMeasureModel [
 	<script: 'self exampleGetStationMeasureModel inspect'>
 	

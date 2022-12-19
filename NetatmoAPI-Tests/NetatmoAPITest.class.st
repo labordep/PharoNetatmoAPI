@@ -19,6 +19,21 @@ NetatmoAPITest class >> sampleError0ResponseJSON [
 '
 ]
 
+{ #category : #'official samples - errors' }
+NetatmoAPITest class >> sampleError9ResponseJSON [
+	<script: 'self sampleError9ResponseJSON inspect'>
+
+	^STONJSON fromString:
+'
+{
+"error":{
+"code":9,
+"message":"Device not found"
+}
+}
+'
+]
+
 { #category : #'official samples - data' }
 NetatmoAPITest class >> sampleGetStationsDataResponseJSON [
 	<script: 'self sampleGetStationsDataResponseJSON inspect'>
@@ -249,4 +264,13 @@ NetatmoAPITest >> testConnexionErrors [
 	api apiUrl: nil.
 	[api getHealthyHomeCoachDevices] onErrorDo:[ :e | error := e].
 	self assert: (error isKindOf: STONReaderError).
+]
+
+{ #category : #test }
+NetatmoAPITest >> testDeviceError [
+
+	| api |
+	api := NetatmoAPI new.
+	
+	self assert: ((api checkIfError: self class sampleError9ResponseJSON) isKindOf: NetatmoDeviceNotFoundError).
 ]

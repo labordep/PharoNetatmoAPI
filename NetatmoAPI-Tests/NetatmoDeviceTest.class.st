@@ -12,6 +12,7 @@ NetatmoDeviceTest >> checkDeviceInitialization: aNetatmoDevice [
 
 	self assert: aNetatmoDevice type equals: aNetatmoDevice class type.
 	self assert: aNetatmoDevice id isNil.
+	self assert: aNetatmoDevice name isNil.
 	self assert: aNetatmoDevice firmware isNil.
 	self assert: aNetatmoDevice isReachable not.
 	self assert: aNetatmoDevice lastSetupDateTime isNil.
