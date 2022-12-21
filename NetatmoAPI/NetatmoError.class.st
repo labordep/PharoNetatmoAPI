@@ -10,7 +10,7 @@ Class {
 { #category : #accessing }
 NetatmoError class >> code [
 
-	self subclassResponsibility 
+	^ nil
 ]
 
 { #category : #constructor }

@@ -1,7 +1,7 @@
 Class {
 	#name : #NetatmoAPIExamples,
 	#superclass : #Object,
-	#category : #'NetatmoAPI-Examples'
+	#category : #'NetatmoAPI-Incubator'
 }
 
 { #category : #'low level examples' }

@@ -20,6 +20,34 @@ NetatmoAPITest class >> sampleError0ResponseJSON [
 ]
 
 { #category : #'official samples - errors' }
+NetatmoAPITest class >> sampleError10ResponseJSON [
+	<script: 'self sampleError10ResponseJSON inspect'>
+
+	^STONJSON fromString:
+'{
+"error":{
+"code":10,
+"message":"Argument(s) is(are) missing"
+}
+}'
+]
+
+{ #category : #'official samples - errors' }
+NetatmoAPITest class >> sampleError3ResponseJSON [
+	<script: 'self sampleError3ResponseJSON inspect'>
+
+	^STONJSON fromString:
+'
+{
+"error":{
+"code":3,
+"message":"Access token expired"
+}
+}
+'
+]
+
+{ #category : #'official samples - errors' }
 NetatmoAPITest class >> sampleError9ResponseJSON [
 	<script: 'self sampleError9ResponseJSON inspect'>
 
@@ -339,6 +367,9 @@ NetatmoAPITest >> testCheckIfError [
 	api := NetatmoAPI new.
 	
 	self assert: ((api checkIfError: self class sampleError0ResponseJSON) isKindOf: NetatmoExplicitError).
+	self assert: ((api checkIfError: self class sampleError3ResponseJSON) isKindOf: NetatmoExpiredTokenError).
+	self assert: ((api checkIfError: self class sampleError9ResponseJSON) isKindOf: NetatmoDeviceNotFoundError).
+	self assert: ((api checkIfError: self class sampleError10ResponseJSON) isKindOf: NetatmoMissingArgumentError).
 ]
 
 { #category : #tests }
@@ -361,10 +392,14 @@ NetatmoAPITest >> testConnexionErrors [
 ]
 
 { #category : #test }
-NetatmoAPITest >> testDeviceError [
+NetatmoAPITest >> testPrintScale [
 
 	| api |
 	api := NetatmoAPI new.
-	
-	self assert: ((api checkIfError: self class sampleError9ResponseJSON) isKindOf: NetatmoDeviceNotFoundError).
+	self assert: (api printScale: 30 minutes) equals: '30min'.
+	self assert: (api printScale: 1 hour) equals: '1hour'.
+	self assert: (api printScale: 3 hours) equals: '3hours'.
+	self assert: (api printScale: 1 day) equals: '1day'.
+	self assert: (api printScale: 1 week) equals: '1week'.
+	self assert: (api printScale: (Duration month: 1)) equals: '1month'.
 ]
