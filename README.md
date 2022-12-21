@@ -35,6 +35,22 @@ api token: 'yourAccess|tokenHere'
 
 Use "api" category methods to request datas.
 
+### Get Weather station datas
+
+Get all device, return a list of ```NetatmoStation``` devices.
+
+```smalltalk
+| devices |
+devices := api getStationDevices.
+```
+
+Get specific device from mac address (id), return a list of ```NetatmoStation``` devices.
+
+```smalltalk
+| devices |
+devices := api getStationDevice:: '01:23:45:67:89:ab'.
+```
+
 ### Get Healthy Home Coach datas
 
 Get all device, return a list of ```NetatmoHealthyHomeCoach``` devices.
@@ -49,6 +65,42 @@ Get specific device from mac address (id), return a list of ```NetatmoHealthyHom
 ```smalltalk
 | devices |
 devices := api getHealthyHomeCoachDevice: '01:23:45:67:89:ab'.
+```
+
+### Get measures from a device
+
+Use the API to get measure from a device, return a list of ```NetatmoMeasure``` measures. 
+Each ```NetatmoMeasure``` contains data (for example 56), type (for example humidity), unit (for example '%') and date time of the measure.
+Use ```types:``` to choose data type with ```NetatmoDataTypeEnum``` enums.
+
+Get one type of data from a device.
+
+```smalltalk
+| measures |
+measures := api getMeasures: (device id) 
+                types: NetatmoDataTypeEnum humidity.
+```
+
+Get multiples types of data from a device.
+
+```smalltalk
+| measures |
+measures := api getMeasures: (device id) 
+                types: (OrderedCollection 
+                           with: NetatmoDataTypeEnum temperature 
+                           with: NetatmoDataTypeEnum humidity).
+```
+
+Is it possible to request a date time interval of measure, with a scale for the sample.
+Example : get temperature each days at the current time in the last week.
+
+```smalltalk
+| measures |
+measures := api getMeasures: (device id) 
+                types: NetatmoDataTypeEnum temperature 
+                scale: 1 day 
+                dateTimeBegin: (DateAndTime now - 7 day) 
+                dateTimeEnd: DateAndTime now.
 ```
 
 ## Legals and privacy
