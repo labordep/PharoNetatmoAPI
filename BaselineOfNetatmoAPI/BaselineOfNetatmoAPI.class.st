@@ -1,3 +1,8 @@
+"
+BaselineOfNetatmoAPI
+
+Documentation about BaselineOf : https://github.com/pharo-open-documentation/pharo-wiki/blob/master/General/Baselines.md
+"
 Class {
 	#name : #BaselineOfNetatmoAPI,
 	#superclass : #BaselineOf,
@@ -24,5 +29,6 @@ BaselineOfNetatmoAPI >> baseline: spec [
 BaselineOfNetatmoAPI >> dependencies: spec [
 
 	self flag:'load only Zinc OAuth2 package'.
-	"spec baseline: 'ZincHTTPComponents' with: [ spec repository: 'github://svenvc/zinc/repository' ]."
+	spec baseline: 'ZincHTTPComponents' with: [ spec repository: 'github://svenvc/zinc/repository' ];
+	project: 'ZincHTTPComponents' copyFrom: 'ZincHTTPComponents' with: [ spec loads: #('Zinc-SSO-OAuth2-Core') ].
 ]
