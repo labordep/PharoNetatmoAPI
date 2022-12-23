@@ -12,8 +12,10 @@ For the moment you should use the api by passing your access token. The automati
 
 ```smalltalk
 Metacello new
-   baseline: 'PharoNetatmoAPI';
-   repository: 'github://labordep/PharoNetatmoAPI';
+   baseline: 'NetatmoAPI';
+   repository: 'github://labordep/PharoNetatmoAPI:main';
+	onConflictUseIncoming;
+	ignoreImage;
    load.
 ```
 
