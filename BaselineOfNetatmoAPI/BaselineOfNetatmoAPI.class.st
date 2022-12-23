@@ -16,7 +16,7 @@ BaselineOfNetatmoAPI >> baseline: spec [
 		for: #common
 		do: [ 
 			"Dependencies"
-			"self dependencies: spec."
+			self dependencies: spec.
 			
 			"Packages"
 			spec
