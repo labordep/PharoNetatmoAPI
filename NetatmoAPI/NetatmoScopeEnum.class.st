@@ -28,7 +28,7 @@ NetatmoScopeEnum class >> allReadScopes [
 	list add: self readHomecoach.
 	list add: self readThermostat.
 	list add: self readPresence.
-	^list
+	^list asArray
 ]
 
 { #category : #shortcuts }
@@ -39,7 +39,7 @@ NetatmoScopeEnum class >> allWriteScopes [
 	list := OrderedCollection new.
 	list add: self writeCamera.
 	list add: self writeThermostat.
-	^list
+	^list asArray
 ]
 
 { #category : #read }

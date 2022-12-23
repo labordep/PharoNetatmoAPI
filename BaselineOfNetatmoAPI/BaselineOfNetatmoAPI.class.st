@@ -28,7 +28,7 @@ BaselineOfNetatmoAPI >> baseline: spec [
 { #category : #baselines }
 BaselineOfNetatmoAPI >> dependencies: spec [
 
-	self flag:'load only Zinc OAuth2 package'.
+	"Load Zinc project with OAuth2 package"
 	spec baseline: 'ZincHTTPComponents' with: [ spec repository: 'github://svenvc/zinc/repository' ];
 	project: 'ZincHTTPComponents' copyFrom: 'ZincHTTPComponents' with: [ spec loads: #('Zinc-SSO-OAuth2-Core') ].
 ]

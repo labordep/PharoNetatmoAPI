@@ -5,36 +5,10 @@ Class {
 	#name : #NetatmoAPIAuth,
 	#superclass : #Object,
 	#instVars : [
-		'oauth2Url',
-		'clientId',
-		'clientSecret'
+		'oauth2Url'
 	],
 	#category : #'NetatmoAPI-Incubator'
 }
-
-{ #category : #accessing }
-NetatmoAPIAuth >> clientId [
-
-	^ clientId
-]
-
-{ #category : #accessing }
-NetatmoAPIAuth >> clientId: anObject [
-
-	clientId := anObject
-]
-
-{ #category : #accessing }
-NetatmoAPIAuth >> clientSecret [
-
-	^ clientSecret
-]
-
-{ #category : #accessing }
-NetatmoAPIAuth >> clientSecret: anObject [
-
-	clientSecret := anObject
-]
 
 { #category : #'api - authorization' }
 NetatmoAPIAuth >> getOrRefreshToken [
