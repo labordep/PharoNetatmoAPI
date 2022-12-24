@@ -28,7 +28,8 @@ BaselineOfNetatmoAPI >> baseline: spec [
 { #category : #baselines }
 BaselineOfNetatmoAPI >> dependencies: spec [
 
-	"Load Zinc project with OAuth2 package"
+	"Load Zinc project with OAuth2 and WebSocket package"
 	spec baseline: 'ZincHTTPComponents' with: [ spec repository: 'github://svenvc/zinc/repository' ];
-	project: 'ZincHTTPComponents' copyFrom: 'ZincHTTPComponents' with: [ spec loads: #('Zinc-SSO-OAuth2-Core') ].
+	project: 'ZincHTTPComponents' copyFrom: 'ZincHTTPComponents' with: [ spec loads: #('Zinc-SSO-OAuth2-Core') ];
+	project: 'ZincHTTPComponents' copyFrom: 'ZincHTTPComponents' with: [ spec loads: #('Zinc-WebSocket-Core') ].
 ]
