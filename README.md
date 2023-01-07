@@ -2,11 +2,15 @@
 
 Pharo Netatmo API implementation for Legrand Netatmo products.
 
-## Connexion and authentication
+## Connexion and OAuth2 authentication
 
-You cannot access data directly from the devices : it is not possible for the moment. The only way to access the data and the devices is via the Netatmo Cloud. You need to be Internet connected to get datas from your devices.
+You cannot access data directly from the devices : Netatmo not provide that for the moment. The only way to access the data and the devices is via Netatmo servers. You need to be connected to Internet to get datas from your devices.
 
-For the moment you should use the api by passing your access token. The automatic token managment is made by Netatmo with an OAuth2 protocol. This is not yet implement in this project, the long term objective is to have this kind of connexion for a desktop applications. There are some works about OAuth2 in "incubator" package, see next updates...
+The access require an OAuth2 authentication to get an access token. This token should be refresh in time with another authentication request. For more details about the security see the link to official Netatmo documentation at the bottom of this page. 
+
+OAuth2 authentication is working in this project using Zinc and can be used for desktop or web applications.
+
+When your token is recover, use the api with it during the token validity time.
 
 ## Installing
 
@@ -21,15 +25,56 @@ Metacello new
 
 ## Prerequisites
 
-1 - Create an application access with your Netatmo connect account
+Create an application access with your Netatmo connect account to get your client_id and client_secret datas.
+See the bottom section to use the OAuth2 authentication in this project. 
 
 For more details [see the official guidelines](https://dev.netatmo.com/guideline).
 
-2 - Create an access token
+## How to authenticate
 
-For more details [see the official security documentation](https://dev.netatmo.com/apidocumentation/oauth)
+This section describes how to authenticate and get an access token.
+This step is not mandatory if you get manually a token, for example directly by a Netamo account website or another providing library.
+When you get a token you can use the API, see next section to have some examples.
 
-## How to use
+First, instanciate a new ```NetatmoAPIAuthentificator``` with your client_id and client_secret datas. You need to specifiy the scope of your datas, for examples : thermostat temperature, humidity, etc. If your are not sure or if you need all use ```NetatmoScopeEnum allReadScopes``` to get all can be read datas.
+
+```smalltalk
+authenticator := NetatmoAPIAuthentificator 
+	clientId: 'myClientId' 
+	clientSecret: 'myClientSecret' 
+	scopes: (NetatmoScopeEnum allReadScopes).
+```
+
+Now create a new session to request the authentication.
+This method return a ```ZnOAuth2Session``` which provide OAuth2 connexion process.
+
+```smalltalk
+session := authenticator createOAuth2Session. 
+```
+
+If this is the first try to get a token, the session is not live. Call the ```requestUserAuthentication``` method to open your web browser and validate the authentication using the Netatmo online form.
+
+```smalltalk
+session isLive ifFalse:[
+	authenticator requestUserAuthentication.
+].
+```
+At this step your default web browser open the online Netatmo authentication form :
+
+![image](https://user-images.githubusercontent.com/49183340/211155898-80ff55bc-6129-49df-9d64-b73da93bdd00.png)
+
+Check and accept if you are agree. 
+A basic result page is display to confirm the good authentication, close this page when it appears : 
+
+![image](https://user-images.githubusercontent.com/49183340/211156062-c3c5d6d1-9669-49a1-bb1f-19ae43f584bb.png)
+
+Getting your token :
+
+```smalltalk
+token := session liveAccessToken.
+```
+
+## How to use the API to get datas
 
 Instanciante ```NetatmoAPI``` to have to request datas from the API. Use a token to setup the connection.
 
