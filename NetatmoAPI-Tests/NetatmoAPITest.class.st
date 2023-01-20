@@ -388,7 +388,7 @@ NetatmoAPITest >> testConnexionErrors [
 	
 	api apiUrl: nil.
 	[api getHealthyHomeCoachDevices] onErrorDo:[ :e | error := e].
-	self assert: (error isKindOf: STONReaderError).
+	self assert: (error isKindOf: Error). "Type of the Error depends of the JSON used library : STONJSON or NeoJSON"
 ]
 
 { #category : #test }
