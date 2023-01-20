@@ -52,6 +52,87 @@ NetatmoAPIExamples class >> getCurrentSessionToken [
 	^ token
 ]
 
+{ #category : #'Examples - API uses' }
+NetatmoAPIExamples class >> getFirstStationDeviceEachThisWeekDaysHumidityMeasuresExample [
+	"Display first station device humidity measures in a table"
+	"This example works only if your have a station device ;-)"
+	<script>
+	
+	| api devices table measures |
+	api := self getCurrentConnectedNetatmoAPI ifNil:[ ^ self ].
+	
+	devices := api getStationDevices.
+	(devices isNil or:[devices isEmpty]) ifTrue:[ ^ self ].
+	
+	measures := api getMeasures: (devices first id) 
+		types: (OrderedCollection with: NetatmoDataTypeEnum humidity) 
+		scale: 1 day 
+		dateTimeBegin: (DateAndTime now - 7 day) 
+		dateTimeEnd: DateAndTime now.
+	
+	table := SpTablePresenter new
+		addColumn: (SpStringTableColumn title: 'Data' evaluated: #data);
+		addColumn: (SpStringTableColumn title: 'Date & Time' evaluated: #dateTime);
+		addColumn: (SpStringTableColumn title: 'Type' evaluated: #type);
+		addColumn: (SpStringTableColumn title: 'Unit' evaluated: #unit).
+	(measures notNil and:[measures notEmpty]) ifTrue:[table items: measures].
+	
+	table open.
+]
+
+{ #category : #'Examples - API uses' }
+NetatmoAPIExamples class >> getFirstStationDeviceLastDayC02MeasuresExample [
+	"Display first station device humidity measures in a table"
+	"This example works only if your have a station device ;-)"
+	<script>
+	
+	| api devices table measures |
+	api := self getCurrentConnectedNetatmoAPI ifNil:[ ^ self ].
+	
+	devices := api getStationDevices.
+	(devices isNil or:[devices isEmpty]) ifTrue:[ ^ self ].
+	
+	measures := api getMeasures: (devices first id) 
+		types: (OrderedCollection with: NetatmoDataTypeEnum co2) 
+		dateTimeBegin: (DateAndTime now - 1 day) 
+		dateTimeEnd: DateAndTime now.
+	
+	table := SpTablePresenter new
+		addColumn: (SpStringTableColumn title: 'Data' evaluated: #data);
+		addColumn: (SpStringTableColumn title: 'Date & Time' evaluated: #dateTime);
+		addColumn: (SpStringTableColumn title: 'Type' evaluated: #type);
+		addColumn: (SpStringTableColumn title: 'Unit' evaluated: #unit).
+	(measures notNil and:[measures notEmpty]) ifTrue:[table items: measures].
+	
+	table open.
+]
+
+{ #category : #'Examples - API uses' }
+NetatmoAPIExamples class >> getFirstStationDeviceTemperatureMeasuresExample [
+	"Display first station device humidity measures in a table"
+	"This example works only if your have a station device ;-)"
+	<script>
+	
+	| api devices table measures |
+	api := self getCurrentConnectedNetatmoAPI ifNil:[ ^ self ].
+	
+	devices := api getStationDevices.
+	(devices isNil or:[devices isEmpty]) ifTrue:[ ^ self ].
+	
+	measures := api 
+		getMeasures: (devices first id) 
+		types: (OrderedCollection with: NetatmoDataTypeEnum temperature). 
+	
+	table := SpTablePresenter new
+		addColumn: (SpStringTableColumn title: 'Data' evaluated: #data);
+		addColumn: (SpStringTableColumn title: 'Date & Time' evaluated: #dateTime);
+		addColumn: (SpStringTableColumn title: 'Type' evaluated: #type);
+		addColumn: (SpStringTableColumn title: 'Unit' evaluated: #unit).
+	(measures notNil and:[measures notEmpty]) ifTrue:[table items: measures].
+	
+	table open.
+]
+
 { #category : #'Examples - connexion' }
 NetatmoAPIExamples class >> getSessionAndAuthenticateIfNecessary [ 
 	<script>
@@ -104,7 +185,7 @@ NetatmoAPIExamples class >> getStationDevicesExample [
 		addColumn: (SpStringTableColumn title: 'Name' evaluated: #name);
 		addColumn: (SpStringTableColumn title: 'Firmware version' evaluated: #firmware);
 		addColumn: (SpStringTableColumn title: 'Reachable' evaluated: #isReachable).
-	table items: devices.
+	(devices notNil and:[devices notEmpty]) ifTrue:[table items: devices].
 	
 	table open.
 ]
