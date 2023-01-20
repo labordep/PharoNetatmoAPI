@@ -21,7 +21,8 @@ BaselineOfNetatmoAPI >> baseline: spec [
 			"Packages"
 			spec
 				package: 'NetatmoAPI';
-				package: 'NetatmoAPI-Tests' with: [ spec requires: #('NetatmoAPI') ].
+				package: 'NetatmoAPI-Tests' with: [ spec requires: #('NetatmoAPI') ];
+				package: 'NetatmoAPI-Examples' with: [ spec requires: #('NetatmoAPI') ].
 		]
 ]
 
