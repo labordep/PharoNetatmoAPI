@@ -154,6 +154,23 @@ measures := api getMeasures: (device id)
                 dateTimeEnd: DateAndTime now.
 ```
 
+## More examples
+
+The package ```NetatmoAPI-Examples``` contains some API uses examples with basics user interfaces.
+Somes illustrations :
+
+Last 7 days humidity datas :
+
+![image](https://user-images.githubusercontent.com/49183340/213777951-ea53ac13-9e08-4cf5-8319-6215db633046.png)
+
+Oldest temperature datas : 
+
+![image](https://user-images.githubusercontent.com/49183340/213778142-5cdef60d-6634-481f-9aa0-2ff73235083f.png)
+
+A week humidity evolution :
+
+![image](https://user-images.githubusercontent.com/49183340/213778296-c42abfce-c8c5-4b09-a1ef-d036545be709.png)
+
 ## Legals and privacy
 
 Using Netatmo Connect APIs you will have access to very sensitive information. This is particularly true if your app accesses our Cameras (live stream or videos). Make sure you respect user's privacy and have a strong privacy policy.
