@@ -170,6 +170,35 @@ NetatmoAPIExamples class >> getSessionAndAuthenticateIfNecessary [
 	^ session
 ]
 
+{ #category : #'Examples - API uses with Roassal' }
+NetatmoAPIExamples class >> getStationDeviceWeekHumidityGraphExample [
+	"This example display some humidity data in a Roassal graph for the week"
+	"This example works only if your have a station device ;-)"
+	<script>
+	
+	| api devices measures chart |
+	api := self getCurrentConnectedNetatmoAPI ifNil:[ ^ self ].
+	
+	devices := api getStationDevices.
+	(devices isNil or:[devices isEmpty]) ifTrue:[ ^ self ].
+	
+	measures := SortedCollection sortBlock: [ :a :b | a dateTime < b dateTime ].
+	
+	"Because the number of result is limited, need to do multiple requests"
+	1 to: 7 do:[ :i |
+		measures addAll: (api getMeasures: (devices first id) 
+			types: (OrderedCollection with: NetatmoDataTypeEnum humidity) 
+			dateTimeBegin: (DateAndTime now - (i day)) 
+			dateTimeEnd: (DateAndTime now - ((i - 1) day))).
+	].	
+	
+	chart := RSChart new.
+	chart addPlot: (RSLinePlot new y: (measures collect:[ :e | e data ])).
+	chart addDecoration: (RSVerticalTick new).
+	chart addDecoration: (RSHorizontalTick new).
+	chart open.
+]
+
 { #category : #'Examples - API uses' }
 NetatmoAPIExamples class >> getStationDevicesExample [
 	"Display station devices in a table"
