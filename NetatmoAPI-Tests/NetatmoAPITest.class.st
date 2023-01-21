@@ -348,6 +348,7 @@ NetatmoAPITest >> testBuildStationDevices [
 	self assert: devices size equals: 1.
 	
 	device := devices first.
+	"test device properties"
 	self assert: device isStation.
 	self assert: device id equals: '70:ee:50:22:a3:00'.
 	self assert: device firmware equals: 137.
@@ -358,6 +359,110 @@ NetatmoAPITest >> testBuildStationDevices [
 	self assert: device lastUpgradeDateTime equals: (DateAndTime fromUnixTime: 1512405614).
 	self assert: device setupDateTime equals: (DateAndTime fromUnixTime: 1435834348).
 	self assert: device wifiStatus equals: 55.
+	self assert: device wifiStatusSignalQuality equals: 'Good'.
+	
+	"test device modules properties"
+	self assert: device haveModules.
+	self assert: device numberOfModules equals: 4.
+]
+
+{ #category : #test }
+NetatmoAPITest >> testBuildStationDevicesModules [
+
+	| api devices device module1 module2 module3 module4 |
+	api := NetatmoAPI new.
+	
+	devices := api buildDevices: self class sampleGetStationsDataResponseJSON.
+	self assert: devices size equals: 1.
+	device := devices first.
+	
+	module1 := device modules at: 1.
+	"Device properties"
+	self assert: module1 isStation not.
+	self assert: module1 isIndoorModule.
+	self assert: module1 id equals: '06:00:00:02:47:00'.
+	self assert: module1 firmware equals: 19.
+	self assert: module1 isReachable.
+	self assert: module1 name equals: 'Indoor Module'.
+	self assert: module1 lastSetupDateTime equals: (DateAndTime fromUnixTime: 1435834348).
+	self assert: module1 lastStatusStoreDateTime isNil.
+	self assert: module1 lastUpgradeDateTime isNil.
+	self assert: module1 setupDateTime isNil.
+	self assert: module1 wifiStatus isNil.
+	self assert: module1 wifiStatusSignalQuality equals: 'N/A'.
+	"Modules properties"
+	self assert: module1 batteryPercent equals: 58.
+	self assert: module1 batteryStatus equals: 5148.
+	self assert: module1 batteryStatusDescription equals: 'High'.
+	self assert: module1 lastMessageDateTime equals: (DateAndTime fromUnixTime: 1555677746).
+	self assert: module1 lastSeenDateTime equals: (DateAndTime fromUnixTime: 1555677746).
+	self assert: module1 radioStatus equals: 31.
+	
+	module2 := device modules at: 2.
+	"Device properties"
+	self assert: module2 isStation not.
+	self assert: module2 isOutdoorModule.
+	self assert: module2 id equals: '06:00:00:02:47:00'.
+	self assert: module2 firmware equals: 19.
+	self assert: module2 isReachable.
+	self assert: module2 name equals: 'Outdoor Module'.
+	self assert: module2 lastSetupDateTime equals: (DateAndTime fromUnixTime: 1435834348).
+	self assert: module2 lastStatusStoreDateTime isNil.
+	self assert: module2 lastUpgradeDateTime isNil.
+	self assert: module2 setupDateTime isNil.
+	self assert: module2 wifiStatus isNil.
+	self assert: module2 wifiStatusSignalQuality equals: 'N/A'.
+	"Modules properties"
+	self assert: module2 batteryPercent equals: 58.
+	self assert: module2 batteryStatus equals: 5148.
+	self assert: module2 batteryStatusDescription equals: 'High'.
+	self assert: module2 lastMessageDateTime equals: (DateAndTime fromUnixTime: 1555677746).
+	self assert: module2 lastSeenDateTime equals: (DateAndTime fromUnixTime: 1555677746).
+	self assert: module2 radioStatus equals: 31.
+	
+	module3 := device modules at: 3.
+	"Device properties"
+	self assert: module3 isStation not.
+	self assert: module3 isRainGaugeModule.
+	self assert: module3 id equals: '06:00:00:02:47:00'.
+	self assert: module3 firmware equals: 19.
+	self assert: module3 isReachable.
+	self assert: module3 name equals: 'Rain gauge'.
+	self assert: module3 lastSetupDateTime equals: (DateAndTime fromUnixTime: 1435834348).
+	self assert: module3 lastStatusStoreDateTime isNil.
+	self assert: module3 lastUpgradeDateTime isNil.
+	self assert: module3 setupDateTime isNil.
+	self assert: module3 wifiStatus isNil.
+	self assert: module3 wifiStatusSignalQuality equals: 'N/A'.
+	"Modules properties"
+	self assert: module3 batteryPercent equals: 58.
+	self assert: module3 batteryStatus equals: 5148.
+	self assert: module3 batteryStatusDescription equals: 'High'.
+	self assert: module3 lastMessageDateTime equals: (DateAndTime fromUnixTime: 1555677746).
+	self assert: module3 lastSeenDateTime equals: (DateAndTime fromUnixTime: 1555677746).
+	self assert: module3 radioStatus equals: 31.
+	
+	module4 := device modules at: 4.
+	"Device properties"
+	self assert: module4 isStation not.
+	self assert: module4 isAnemometerModule.
+	self assert: module4 id equals: '06:00:00:02:47:00'.
+	self assert: module4 firmware equals: 19.
+	self assert: module4 isReachable.
+	self assert: module4 name equals: 'Wind Module'.
+	self assert: module4 lastSetupDateTime equals: (DateAndTime fromUnixTime: 1435834348).
+	self assert: module4 lastStatusStoreDateTime isNil.
+	self assert: module4 lastUpgradeDateTime isNil.
+	self assert: module4 setupDateTime isNil.
+	self assert: module4 wifiStatus isNil.
+	self assert: module4 wifiStatusSignalQuality equals: 'N/A'.
+	"Modules properties"
+	self assert: module4 batteryPercent equals: 58.
+	self assert: module4 batteryStatus equals: 5148.
+	self assert: module4 batteryStatusDescription equals: 'Medium'.
+	self assert: module4 lastMessageDateTime equals: (DateAndTime fromUnixTime: 1555677746).
+	self assert: module4 lastSeenDateTime equals: (DateAndTime fromUnixTime: 1555677746).
+	self assert: module4 radioStatus equals: 31.
 ]
 
 { #category : #test }
@@ -402,4 +507,31 @@ NetatmoAPITest >> testPrintScale [
 	self assert: (api printScale: 1 day) equals: '1day'.
 	self assert: (api printScale: 1 week) equals: '1week'.
 	self assert: (api printScale: (Duration month: 1)) equals: '1month'.
+]
+
+{ #category : #test }
+NetatmoAPITest >> testStationDevicesModulesAccessing [
+
+	| api devices device modules |
+	api := NetatmoAPI new.
+	
+	devices := api buildDevices: self class sampleGetStationsDataResponseJSON.
+	self assert: devices size equals: 1.
+	device := devices first.
+	
+	modules := device anemometerModules.
+	self assert: modules size equals: 1.
+	self assert: modules first isAnemometerModule. 
+	
+	modules := device indoorModules.
+	self assert: modules size equals: 1.
+	self assert: modules first isIndoorModule. 
+	
+	modules := device outdoorModules.
+	self assert: modules size equals: 1.
+	self assert: modules first isOutdoorModule. 
+	
+	modules := device rainGaugeModules. 
+	self assert: modules size equals: 1.
+	self assert: modules first isRainGaugeModule. 
 ]

@@ -34,6 +34,7 @@ NetatmoAPI >> buildDevices: aDictionary [
 		device := NetatmoDevice type: (rawDevice at: #type ifAbsent:[nil]).
 		device ifNotNil:[
 			
+			"Build common devices properties"
 			device id: (rawDevice at: '_id' ifPresent:[ :e | e asString ] ifAbsent:[ nil ]).
 			device setupDateTime: (rawDevice at: 'date_setup' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ nil ]).
 			device lastSetupDateTime: (rawDevice at: 'last_setup' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ nil ]).
@@ -43,6 +44,9 @@ NetatmoAPI >> buildDevices: aDictionary [
 			device lastUpgradeDateTime: (rawDevice at: 'last_upgrade' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ nil ]).
 			device wifiStatus: (rawDevice at: 'wifi_status' ifPresent:[ :e | e asNumber ] ifAbsent:[ nil ]).
 			device isReachable: (rawDevice at: 'reachable' ifPresent:[ :e | e ] ifAbsent:[ nil ]).
+			
+			"Build specific devices properties"
+			device isStation ifTrue:[self populateStation: device withRawDatas: rawDevice].
 			
 			devices add: device.	
 		].
@@ -57,7 +61,7 @@ NetatmoAPI >> buildMeasures: aDictionary forDataType: aDataType [
 	
 	measures := SortedCollection sortBlock:[ :a :b | a dateTime < b dateTime ].
 	rawMeasures := aDictionary at: #body ifAbsent:[ ^ measures ].
-	unit := self getDefaultUnitForDataType: aDataType.
+	unit := NetatmoDataTypeEnum defaultUnitForDataType: aDataType.
 	
 	rawMeasures keysAndValuesDo: [ :timestamp :datas | | measure |
 		measure := NetatmoMeasure new.
@@ -104,23 +108,6 @@ NetatmoAPI >> checkIfZnClientError [
 	^ error
 ]
 
-{ #category : #private }
-NetatmoAPI >> getDefaultUnitForDataType: aDataType [
-
-	aDataType ifNil: [ ^ nil ].
-
-	(NetatmoDataTypeEnum allTemperatureDataTypes includes: aDataType) ifTrue: [ ^ '°C' ].
-	(NetatmoDataTypeEnum allHumidityDataTypes includes: aDataType) ifTrue: [ ^ '%' ].
-	(NetatmoDataTypeEnum allCo2DataTypes includes: aDataType) ifTrue: [ ^ 'ppm' ]. 
-	(NetatmoDataTypeEnum allPressureDataTypes includes: aDataType) ifTrue: [ ^ 'bar' ].
-	(NetatmoDataTypeEnum allNoiseDataTypes includes: aDataType) ifTrue: [ ^ 'dB' ].
-	(NetatmoDataTypeEnum allRainDataTypes includes: aDataType) ifTrue: [ ^ 'mm' ].
-	(NetatmoDataTypeEnum allWindStrengthDataTypes includes: aDataType) ifTrue: [ ^ 'km/h' ].
-	(NetatmoDataTypeEnum allWindAngleDataTypes includes: aDataType) ifTrue: [ ^ '°' ].
-	
-	^ nil
-]
-
 { #category : #'api - devices' }
 NetatmoAPI >> getHealthyHomeCoachDevice: aDeviceId [
 	"aDeviceId is the mac address of the device"
@@ -155,7 +142,7 @@ NetatmoAPI >> getHealthyHomeCoachDevices [
 ]
 
 { #category : #'api - measures' }
-NetatmoAPI >> getMeasures: aDeviceId scale: aDuration types: aTypeOrtypeList dateTimeBegin: dateTimeBegin dateTimeEnd: dateTimeEnd limit: aLimitInteger realTime: isRealTime [
+NetatmoAPI >> getMeasures: aDeviceId module: aModuleId scale: aDuration types: aTypeOrtypeList dateTimeBegin: dateTimeBegin dateTimeEnd: dateTimeEnd limit: aLimitInteger realTime: isRealTime [
 	| result measures scale types |
 	
 	aDeviceId ifNil:[ ^ NetatmoDeviceNotFoundError signal ].
@@ -177,6 +164,7 @@ NetatmoAPI >> getMeasures: aDeviceId scale: aDuration types: aTypeOrtypeList dat
 			setBearerAuthentication: self token.
 		
 		"optional parameters"
+		aModuleId ifNotNil:[znClient queryAt: 'module_id' put: aModuleId].
 		aLimitInteger ifNotNil:[znClient queryAt: 'limit' put: aLimitInteger asInteger].
 		isRealTime ifNotNil:[znClient queryAt: 'real_time' put: isRealTime].
 		dateTimeBegin ifNotNil:[znClient queryAt: 'date_begin' put: dateTimeBegin asUnixTime].
@@ -194,6 +182,30 @@ NetatmoAPI >> getMeasures: aDeviceId scale: aDuration types: aTypeOrtypeList dat
 	
 	
 	
+]
+
+{ #category : #'api - measures' }
+NetatmoAPI >> getMeasures: aDeviceId module: aModuleId types: aTypeOrtypeList [
+	
+	^self getMeasures: aDeviceId module: aModuleId scale: nil types: aTypeOrtypeList dateTimeBegin: nil dateTimeEnd: nil limit: nil realTime: nil
+]
+
+{ #category : #'api - measures' }
+NetatmoAPI >> getMeasures: aDeviceId module: aModuleId types: aTypeOrtypeList dateTimeBegin: dateTimeBegin dateTimeEnd: dateTimeEnd [
+	
+	^self getMeasures: aDeviceId module: aModuleId scale: nil types: aTypeOrtypeList dateTimeBegin: dateTimeBegin dateTimeEnd: dateTimeEnd limit: nil realTime: nil
+]
+
+{ #category : #'api - measures' }
+NetatmoAPI >> getMeasures: aDeviceId module: aModuleId types: aTypeOrtypeList scale: aDuration dateTimeBegin: dateTimeBegin dateTimeEnd: dateTimeEnd [
+	
+	^self getMeasures: aDeviceId module: aModuleId scale: aDuration types: aTypeOrtypeList dateTimeBegin: dateTimeBegin dateTimeEnd: dateTimeEnd limit: nil realTime: nil
+]
+
+{ #category : #'api - measures' }
+NetatmoAPI >> getMeasures: aDeviceId scale: aDuration types: aTypeOrtypeList dateTimeBegin: dateTimeBegin dateTimeEnd: dateTimeEnd limit: aLimitInteger realTime: isRealTime [
+	
+	^self getMeasures: aDeviceId module: nil scale: aDuration types: aTypeOrtypeList dateTimeBegin: dateTimeBegin dateTimeEnd: dateTimeEnd limit: aLimitInteger realTime: isRealTime
 ]
 
 { #category : #'api - measures' }
@@ -253,6 +265,45 @@ NetatmoAPI >> initialize [
 	super initialize.
 	self apiUrl: 'https://api.netatmo.com/api'.
 	znClient := ZnClient new.
+]
+
+{ #category : #private }
+NetatmoAPI >> populateStation: device withRawDatas: rawDevice [
+	"Populate a station with station datas from a raw data source"
+	
+	| modules list |
+	"Search for mpdules"
+	modules := OrderedCollection new.
+	list := rawDevice at: #modules ifAbsent:[OrderedCollection new].
+	list do:[ :object |
+		(object isKindOf: Dictionary) 
+			ifTrue:[modules addAll: (object at: #oneOf ifAbsent:[OrderedCollection new])]
+			ifFalse:[modules add: object].
+	].
+	
+	"Create modules if necessary"
+	modules do:[ :rawModule | | module |
+		module := NetatmoDevice type: (rawModule at: #type ifAbsent:[nil]).
+		module ifNotNil:[ 
+			
+			"Build common modules properties"
+			module id: (rawModule at: '_id' ifPresent:[ :e | e asString ] ifAbsent:[ nil ]).
+			module batteryPercent: (rawModule at: 'battery_percent' ifPresent:[ :e | e asNumber ] ifAbsent:[ nil ]).
+			module batteryStatus: (rawModule at: 'battery_vp' ifPresent:[ :e | e asNumber ] ifAbsent:[ nil ]).
+			"TODO : dashboard data"
+			"TODO : data type"
+			module firmware: (rawModule at: 'firmware' ifPresent:[ :e | e asNumber ] ifAbsent:[ nil ]).
+			module lastMessageDateTime: (rawModule at: 'last_message' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ nil ]).
+			module lastSeenDateTime: (rawModule at: 'last_seen' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ nil ]).
+			module lastSetupDateTime: (rawModule at: 'last_setup' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ nil ]).
+			module name: (rawModule at: 'module_name' ifPresent:[ :e | e asString ] ifAbsent:[ nil ]).
+			module isReachable: (rawModule at: 'reachable' ifPresent:[ :e | e ] ifAbsent:[ nil ]).
+			module radioStatus: (rawModule at: 'rf_status' ifPresent:[ :e | e asNumber ] ifAbsent:[ nil ]).
+			
+			device modules add: module.
+		].
+	].
+	
 ]
 
 { #category : #private }

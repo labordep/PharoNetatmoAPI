@@ -173,7 +173,7 @@ NetatmoAPIExamples class >> getSessionAndAuthenticateIfNecessary [
 { #category : #'Examples - API uses with Roassal' }
 NetatmoAPIExamples class >> getStationDeviceWeekHumidityGraphExample [
 	"This example display some humidity data in a Roassal graph for the week"
-	"This example works only if your have a station device ;-)"
+	"This example works only if your have a weather station device ;-)"
 	<script>
 	
 	| api devices measures chart |
@@ -199,6 +199,45 @@ NetatmoAPIExamples class >> getStationDeviceWeekHumidityGraphExample [
 	chart open.
 ]
 
+{ #category : #'Examples - API uses with Roassal' }
+NetatmoAPIExamples class >> getStationDeviceWeekInternalAndExternalHumidityGraphExample [
+	"This example display some humidity data in a Roassal graph for the week"
+	"This example works only if your have a weather station device ;-)"
+	<script>
+	
+	| api devices indoorMeasures chart station outdoorMeasures |
+	api := self getCurrentConnectedNetatmoAPI ifNil:[ ^ self ].
+	
+	devices := api getStationDevices.
+	(devices isNil or:[devices isEmpty]) ifTrue:[ ^ self ].
+	station := devices first.
+	
+	indoorMeasures := SortedCollection sortBlock: [ :a :b | a dateTime < b dateTime ].
+	outdoorMeasures := SortedCollection sortBlock: [ :a :b | a dateTime < b dateTime ].
+	
+	"Because the number of result is limited, need to do multiple requests"
+	1 to: 7 do:[ :i |
+		indoorMeasures addAll: (api getMeasures: (station id) 
+			types: (OrderedCollection with: NetatmoDataTypeEnum humidity) 
+			dateTimeBegin: (DateAndTime now - (i day)) 
+			dateTimeEnd: (DateAndTime now - ((i - 1) day))).
+	].	
+	 
+	1 to: 7 do:[ :i |
+		outdoorMeasures addAll: (api getMeasures: (station id) module: (station outdoorModules first id) 
+			types: (OrderedCollection with: NetatmoDataTypeEnum humidity) 
+			dateTimeBegin: (DateAndTime now - (i day)) 
+			dateTimeEnd: (DateAndTime now - ((i - 1) day))).
+	].	
+	
+	chart := RSChart new.
+	chart addPlot: (RSLinePlot new y: (indoorMeasures collect:[ :e | e data ])).
+	chart addPlot: (RSLinePlot new y: (outdoorMeasures collect:[ :e | e data ])).
+	chart addDecoration: (RSVerticalTick new).
+	chart addDecoration: (RSHorizontalTick new).
+	chart open.
+]
+
 { #category : #'Examples - API uses' }
 NetatmoAPIExamples class >> getStationDevicesExample [
 	"Display station devices in a table"
@@ -212,11 +251,37 @@ NetatmoAPIExamples class >> getStationDevicesExample [
 	table := SpTablePresenter new
 		addColumn: (SpStringTableColumn title: 'Id' evaluated: #id);
 		addColumn: (SpStringTableColumn title: 'Name' evaluated: #name);
+		addColumn: (SpStringTableColumn title: 'Product' evaluated: #product);
+		addColumn: (SpStringTableColumn title: 'Type' evaluated: #type);
 		addColumn: (SpStringTableColumn title: 'Firmware version' evaluated: #firmware);
 		addColumn: (SpStringTableColumn title: 'Reachable' evaluated: #isReachable).
 	(devices notNil and:[devices notEmpty]) ifTrue:[table items: devices].
 	
 	table open.
+]
+
+{ #category : #'Examples - API uses' }
+NetatmoAPIExamples class >> getStationDevicesWithModulesExample [
+	"Display station devices and modules in a tree table"
+	<script>
+	
+	| api devices treeTable |
+	api := self getCurrentConnectedNetatmoAPI ifNil:[ ^ self ].
+	
+	devices := api getStationDevices.
+	
+	treeTable := SpTreeTablePresenter new
+		addColumn:(SpStringTableColumn title: 'Product' evaluated: #product);
+		addColumn:(SpStringTableColumn title: 'Name' evaluated: #name);
+		addColumn: (SpStringTableColumn title: 'Type' evaluated: #type);
+		addColumn: (SpStringTableColumn title: 'Firmware version' evaluated: #firmware);
+		addColumn: (SpStringTableColumn title: 'Reachable' evaluated: #isReachable);
+		addColumn: (SpStringTableColumn title: 'Id' evaluated: #id);
+		children: [ :station | station isStation ifTrue:[ station modules] ifFalse:[OrderedCollection new] ].
+		
+	(devices notNil and:[devices notEmpty]) ifTrue:[treeTable roots: devices].
+	
+	treeTable open.
 ]
 
 { #category : #'see class side' }

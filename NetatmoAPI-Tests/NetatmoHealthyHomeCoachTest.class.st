@@ -13,9 +13,11 @@ NetatmoHealthyHomeCoachTest >> testConstructor [
 	| device |
 	device := NetatmoHealthyHomeCoach new.
 	self assert: device type equals: NetatmoHealthyHomeCoach type.
+	self assert: device product equals: NetatmoHealthyHomeCoach product.
 	self assert: device isHealthyHomeCoach.
 	
 	device := NetatmoDevice type: NetatmoHealthyHomeCoach type.
 	self assert: device type equals: NetatmoHealthyHomeCoach type.
+	self assert: device product equals: NetatmoHealthyHomeCoach product.
 	self assert: device isHealthyHomeCoach.
 ]

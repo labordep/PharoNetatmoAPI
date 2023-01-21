@@ -11,10 +11,17 @@ Class {
 		'firmware',
 		'lastUpgradeDateTime',
 		'wifiStatus',
-		'isReachable'
+		'isReachable',
+		'product'
 	],
 	#category : #'NetatmoAPI-Model'
 }
+
+{ #category : #accessing }
+NetatmoDevice class >> product [
+
+	self subclassResponsibility  
+]
 
 { #category : #accessing }
 NetatmoDevice class >> type [
@@ -61,7 +68,8 @@ NetatmoDevice >> initialize [
 	
 	super initialize.
 	type := self class type.
-	isReachable := false.
+	product := self class product.
+	isReachable := false. 
 ]
 
 { #category : #testing }
@@ -139,6 +147,12 @@ NetatmoDevice >> name: anObject [
 ]
 
 { #category : #accessing }
+NetatmoDevice >> product [
+
+	^ product
+]
+
+{ #category : #accessing }
 NetatmoDevice >> setupDateTime [
 
 	^ setupDateTime
@@ -167,4 +181,16 @@ NetatmoDevice >> wifiStatus [
 NetatmoDevice >> wifiStatus: anObject [
 
 	wifiStatus := anObject
+]
+
+{ #category : #printing }
+NetatmoDevice >> wifiStatusSignalQuality [
+
+	| status |
+	status := self wifiStatus.
+	status <= 56 ifTrue: [ ^ 'Good' ].
+	(status > 56 and:[ status < 86]) ifTrue: [ ^ 'Average' ].
+	status >= 86 ifTrue: [ ^ 'Bad' ].
+
+	^ 'Unknown'
 ]

@@ -105,6 +105,23 @@ NetatmoDataTypeEnum class >> co2 [
 	^'co2'
 ]
 
+{ #category : #units }
+NetatmoDataTypeEnum class >> defaultUnitForDataType: aDataType [
+
+	aDataType ifNil: [ ^ nil ].
+
+	(self allTemperatureDataTypes includes: aDataType) ifTrue: [ ^ '°C' ].
+	(self allHumidityDataTypes includes: aDataType) ifTrue: [ ^ '%' ].
+	(self allCo2DataTypes includes: aDataType) ifTrue: [ ^ 'ppm' ]. 
+	(self allPressureDataTypes includes: aDataType) ifTrue: [ ^ 'mbar' ].
+	(self allNoiseDataTypes includes: aDataType) ifTrue: [ ^ 'dB' ].
+	(self allRainDataTypes includes: aDataType) ifTrue: [ ^ 'mm' ].
+	(self allWindStrengthDataTypes includes: aDataType) ifTrue: [ ^ 'kph' ].
+	(self allWindAngleDataTypes includes: aDataType) ifTrue: [ ^ '°' ].
+	
+	^ nil
+]
+
 { #category : #wind }
 NetatmoDataTypeEnum class >> gustAngle [ 
 

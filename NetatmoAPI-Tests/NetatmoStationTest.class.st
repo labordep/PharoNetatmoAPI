@@ -13,9 +13,11 @@ NetatmoStationTest >> testConstructor [
 	| device |
 	device := NetatmoStation new.
 	self assert: device type equals: NetatmoStation type.
+	self assert: device product equals: NetatmoStation product.
 	self assert: device isStation.
 	
 	device := NetatmoDevice type: NetatmoStation type.
 	self assert: device type equals: NetatmoStation type.
+	self assert: device product equals: NetatmoStation product.
 	self assert: device isStation.
 ]
