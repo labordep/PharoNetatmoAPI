@@ -11,6 +11,13 @@ Class {
 }
 
 { #category : #accessing }
+NetatmoAPI class >> maxNumberOfMeasurements [
+	"Maximum number of measurements (default and max are 1024)"
+
+	^ 1024
+]
+
+{ #category : #accessing }
 NetatmoAPI >> apiUrl [
 
 	^ apiUrl
