@@ -165,24 +165,25 @@ measures := api getMeasures: (device id)
 
 ## More examples
 
-The package ```NetatmoAPI-Examples``` contains some API uses examples with basics user interfaces.
-Somes illustrations :
+The package ```NetatmoAPI-Examples``` contains some API uses examples with basics user interfaces using ```Spec``` and ```Roassal```.
 
-Last 7 days humidity datas :
+A list of availables devices (with sub devices) :
 
-![image](https://user-images.githubusercontent.com/49183340/213777951-ea53ac13-9e08-4cf5-8319-6215db633046.png)
+![image](https://user-images.githubusercontent.com/49183340/213928950-00fe6fbd-57a1-41e6-b23e-a7eadf304c4b.png)
 
-Oldest temperature datas : 
+A list of last 7 days Healthy Home Coach measures :
 
-![image](https://user-images.githubusercontent.com/49183340/213778142-5cdef60d-6634-481f-9aa0-2ff73235083f.png)
+![image](https://user-images.githubusercontent.com/49183340/213929145-148b183b-f1c0-4db0-a15d-7166284e557a.png)
 
-A week humidity evolution :
+A Weather Station dashboard :
 
-![image](https://user-images.githubusercontent.com/49183340/213778296-c42abfce-c8c5-4b09-a1ef-d036545be709.png)
+![image](https://user-images.githubusercontent.com/49183340/213929287-af549f2a-7a1d-4b92-ad85-e64b02efcc28.png)
 
-A week humidity evolution with indoor and outdoor datas :
+A Weather Station last 7 days indoor and outdoor humidity :
 
-![image](https://user-images.githubusercontent.com/49183340/213879463-20fbcf14-d8a3-460f-ae1f-6c3ff5c0e41f.png)
+![image](https://user-images.githubusercontent.com/49183340/213929305-d1985a81-38b8-4d45-b098-5756282cc9b5.png)
+
+Etc.
 
 ## Legals and privacy
 
