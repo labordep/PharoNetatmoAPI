@@ -171,6 +171,10 @@ A week humidity evolution :
 
 ![image](https://user-images.githubusercontent.com/49183340/213778296-c42abfce-c8c5-4b09-a1ef-d036545be709.png)
 
+A week humidity evolution with indoor and outdoor datas :
+
+![image](https://user-images.githubusercontent.com/49183340/213879463-20fbcf14-d8a3-460f-ae1f-6c3ff5c0e41f.png)
+
 ## Legals and privacy
 
 Using Netatmo Connect APIs you will have access to very sensitive information. This is particularly true if your app accesses our Cameras (live stream or videos). Make sure you respect user's privacy and have a strong privacy policy.
