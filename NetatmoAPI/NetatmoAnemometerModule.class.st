@@ -4,6 +4,21 @@ Class {
 	#category : #'NetatmoAPI-Model'
 }
 
+{ #category : #printing }
+NetatmoAnemometerModule class >> batteryStatusDescription: aValue [
+
+	aValue ifNil:[ ^ 'Unknown' ].
+
+	aValue >= 6000 ifTrue: [ ^ 'Max' ].
+	aValue >= 5590 ifTrue: [ ^ 'Full' ].
+	aValue >= 5180 ifTrue: [ ^ 'High' ].
+	aValue >= 4770 ifTrue: [ ^ 'Medium' ].
+	aValue >= 4360 ifTrue: [ ^ 'Low' ].
+	aValue < 4360 ifTrue: [ ^ 'Very low' ].
+
+	^ 'Unknown'
+]
+
 { #category : #accessing }
 NetatmoAnemometerModule class >> product [
 
@@ -14,21 +29,6 @@ NetatmoAnemometerModule class >> product [
 NetatmoAnemometerModule class >> type [
 
 	^ 'NAModule2' 
-]
-
-{ #category : #printing }
-NetatmoAnemometerModule >> batteryStatusDescription [
-
-	| status |
-	status := self batteryStatus.
-	status >= 6000 ifTrue: [ ^ 'Max' ].
-	status >= 5590 ifTrue: [ ^ 'Full' ].
-	status >= 5180 ifTrue: [ ^ 'High' ].
-	status >= 4770 ifTrue: [ ^ 'Medium' ].
-	status >= 4360 ifTrue: [ ^ 'Low' ].
-	status < 4360 ifTrue: [ ^ 'Very low' ].
-
-	^ 'Unknown'
 ]
 
 { #category : #testing }

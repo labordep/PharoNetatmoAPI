@@ -6,6 +6,8 @@ Product type : NAMain
 Class {
 	#name : #NetatmoStation,
 	#superclass : #NetatmoDevice,
+	#traits : 'TNetatmoDashboard',
+	#classTraits : 'TNetatmoDashboard classTrait',
 	#instVars : [
 		'modules'
 	],
@@ -30,10 +32,114 @@ NetatmoStation >> anemometerModules [
 	^ self modules select:[ :m | m isAnemometerModule ]
 ]
 
+{ #category : #dashboard }
+NetatmoStation >> dashboardAbsolutePressure [
+
+	^ self dashboardMeasures detect:[ :e | e type = NetatmoMeasureType absolutePressure ] ifNone:[ nil ]
+
+	
+]
+
+{ #category : #dashboard }
+NetatmoStation >> dashboardCO2 [
+
+	^ self dashboardMeasures detect:[ :e | e type = NetatmoMeasureType co2 ] ifNone:[ nil ]
+
+	
+]
+
+{ #category : #dashboard }
+NetatmoStation >> dashboardHumidity [
+
+	^ self dashboardMeasures detect:[ :e | e type = NetatmoMeasureType humidity ] ifNone:[ nil ]
+
+	
+]
+
+{ #category : #dashboard }
+NetatmoStation >> dashboardMaxTemperature [
+
+	^ self dashboardMeasures detect:[ :e | e type = NetatmoMeasureType maxTemperature ] ifNone:[ nil ]
+
+	
+]
+
+{ #category : #dashboard }
+NetatmoStation >> dashboardMinTemperature [
+
+	^ self dashboardMeasures detect:[ :e | e type = NetatmoMeasureType minTemperature ] ifNone:[ nil ]
+
+	
+]
+
+{ #category : #dashboard }
+NetatmoStation >> dashboardNoise [
+
+	^ self dashboardMeasures detect:[ :e | e type = NetatmoMeasureType noise ] ifNone:[ nil ]
+
+	
+]
+
+{ #category : #dashboard }
+NetatmoStation >> dashboardPressure [
+
+	^ self dashboardMeasures detect:[ :e | e type = NetatmoMeasureType pressure ] ifNone:[ nil ]
+
+	
+]
+
+{ #category : #dashboard }
+NetatmoStation >> dashboardPressureTrend [
+
+	^ self dashboardMeasures detect:[ :e | e type = NetatmoMeasureType pressureTrend ] ifNone:[ nil ]
+
+	
+]
+
+{ #category : #dashboard }
+NetatmoStation >> dashboardTemperature [
+
+	^ self dashboardMeasures detect:[ :e | e type = NetatmoMeasureType temperature ] ifNone:[ nil ]
+
+	
+]
+
+{ #category : #dashboard }
+NetatmoStation >> dashboardTemperatureTrend [
+
+	^ self dashboardMeasures detect:[ :e | e type = NetatmoMeasureType temperatureTrend ] ifNone:[ nil ]
+
+	
+]
+
+{ #category : #modules }
+NetatmoStation >> haveAnemometerModules [
+
+	^ self anemometerModules notEmpty
+]
+
+{ #category : #modules }
+NetatmoStation >> haveIndoorModules [
+
+	^ self indoorModules notEmpty
+]
+
 { #category : #modules }
 NetatmoStation >> haveModules [
 
 	^ self modules notEmpty
+]
+
+{ #category : #modules }
+NetatmoStation >> haveOutdoorModules [
+
+	^ self outdoorModules notEmpty
+]
+
+{ #category : #modules }
+NetatmoStation >> haveRainGaugeModules [
+
+	^ self rainGaugeModules notEmpty
 ]
 
 { #category : #modules }

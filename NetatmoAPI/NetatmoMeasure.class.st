@@ -5,7 +5,8 @@ Class {
 		'dateTime',
 		'type',
 		'data',
-		'unit'
+		'unit',
+		'dataType'
 	],
 	#category : #'NetatmoAPI-Model'
 }
@@ -20,6 +21,18 @@ NetatmoMeasure >> data [
 NetatmoMeasure >> data: anObject [
 
 	data := anObject
+]
+
+{ #category : #accessing }
+NetatmoMeasure >> dataType [
+
+	^ dataType
+]
+
+{ #category : #accessing }
+NetatmoMeasure >> dataType: anObject [
+
+	dataType := anObject
 ]
 
 { #category : #accessing }

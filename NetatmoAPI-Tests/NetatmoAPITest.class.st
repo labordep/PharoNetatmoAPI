@@ -316,7 +316,7 @@ NetatmoAPITest class >> sampleGetStationsDataResponseJSON [
 '
 ]
 
-{ #category : #test }
+{ #category : #tests }
 NetatmoAPITest >> testBuildHealthyHomeCoachsDevices [
 
 	| api devices device |
@@ -330,15 +330,40 @@ NetatmoAPITest >> testBuildHealthyHomeCoachsDevices [
 	self assert: device id equals: '70:ee:50:22:a3:00'.
 	self assert: device firmware equals: 45.
 	self assert: device isReachable.
-	self assert: device name equals: 'string'.
+	self assert: device name equals: 'Bedroom'.
 	self assert: device lastSetupDateTime equals: (DateAndTime fromUnixTime: 1513707043).
 	self assert: device lastStatusStoreDateTime equals: (DateAndTime fromUnixTime: 1555677748).
 	self assert: device lastUpgradeDateTime equals: (DateAndTime fromUnixTime: 0).
 	self assert: device setupDateTime equals: (DateAndTime fromUnixTime: 1513707043).
 	self assert: device wifiStatus equals: 22.
+	 
+	"Test device dashboard measures"
+	self assert: device haveDashboardMeasures.
+	self assert: device dashboardMeasures size equals: 9.
+	self assert: device dashboardDateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	
+	"Test each dashboard measures"
+	self assert: device dashboardMinTemperature data equals: 21.2.
+	self assert: device dashboardMinTemperature dateTime equals: (DateAndTime fromUnixTime: 1555631374).
+	self assert: device dashboardMaxTemperature data equals: 27.4.
+	self assert: device dashboardMaxTemperature dateTime equals: (DateAndTime fromUnixTime: 1555662436).
+	self assert: device dashboardCO2 data equals: 967.
+	self assert: device dashboardCO2 dateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	self assert: device dashboardHumidity data equals: 41.
+	self assert: device dashboardHumidity dateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	self assert: device dashboardAbsolutePressure data equals: 1022.9.
+	self assert: device dashboardAbsolutePressure dateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	self assert: device dashboardTemperature data equals: 23.7.
+	self assert: device dashboardTemperature dateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	self assert: device dashboardPressure data equals: 45.
+	self assert: device dashboardPressure dateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	self assert: device dashboardNoise data equals: 42.
+	self assert: device dashboardNoise dateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	self assert: device dashboardHealth data equals: 1.
+	self assert: device dashboardHealth dateTime equals: (DateAndTime fromUnixTime: 1555677739).
 ]
 
-{ #category : #test }
+{ #category : #tests }
 NetatmoAPITest >> testBuildStationDevices [
 
 	| api devices device |
@@ -363,10 +388,42 @@ NetatmoAPITest >> testBuildStationDevices [
 	
 	"test device modules properties"
 	self assert: device haveModules.
+	self assert: device haveOutdoorModules.
+	self assert: device haveIndoorModules.
+	self assert: device haveRainGaugeModules.
+	self assert: device haveAnemometerModules.
 	self assert: device numberOfModules equals: 4.
+	
+	"Test device dashboard measures"
+	self assert: device haveDashboardMeasures.
+	self assert: device dashboardMeasures size equals: 10.
+	self assert: device dashboardDateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	
+	"Test each dashboard measures"
+	self assert: device dashboardMinTemperature data equals: 21.2.
+	self assert: device dashboardMinTemperature dateTime equals: (DateAndTime fromUnixTime: 1555631374).
+	self assert: device dashboardMaxTemperature data equals: 27.4.
+	self assert: device dashboardMaxTemperature dateTime equals: (DateAndTime fromUnixTime: 1555662436).
+	self assert: device dashboardCO2 data equals: 967.
+	self assert: device dashboardCO2 dateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	self assert: device dashboardHumidity data equals: 41.
+	self assert: device dashboardHumidity dateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	self assert: device dashboardAbsolutePressure data equals: 1017.4.
+	self assert: device dashboardAbsolutePressure dateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	self assert: device dashboardTemperature data equals: 23.7.
+	self assert: device dashboardTemperature dateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	self assert: device dashboardPressure data equals: 997.6.
+	self assert: device dashboardPressure dateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	self assert: device dashboardNoise data equals: 42.
+	self assert: device dashboardNoise dateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	self assert: device dashboardTemperatureTrend data equals: 'up'.
+	self assert: device dashboardTemperatureTrend dateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	self assert: device dashboardPressureTrend data equals: 'up'.
+	self assert: device dashboardPressureTrend dateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	
 ]
 
-{ #category : #test }
+{ #category : #tests }
 NetatmoAPITest >> testBuildStationDevicesModules [
 
 	| api devices device module1 module2 module3 module4 |
@@ -465,7 +522,7 @@ NetatmoAPITest >> testBuildStationDevicesModules [
 	self assert: module4 radioStatus equals: 31.
 ]
 
-{ #category : #test }
+{ #category : #tests }
 NetatmoAPITest >> testCheckIfError [
 
 	| api |
@@ -496,7 +553,16 @@ NetatmoAPITest >> testConnexionErrors [
 	self assert: (error isKindOf: Error). "Type of the Error depends of the JSON used library : STONJSON or NeoJSON"
 ]
 
-{ #category : #test }
+{ #category : #tests }
+NetatmoAPITest >> testInitialize [
+
+	| api |
+	api := NetatmoAPI new.
+	
+	self assert: api apiUrl equals: 'https://api.netatmo.com/api'.
+]
+
+{ #category : #tests }
 NetatmoAPITest >> testPrintScale [
 
 	| api |
@@ -509,7 +575,7 @@ NetatmoAPITest >> testPrintScale [
 	self assert: (api printScale: (Duration month: 1)) equals: '1month'.
 ]
 
-{ #category : #test }
+{ #category : #tests }
 NetatmoAPITest >> testStationDevicesModulesAccessing [
 
 	| api devices device modules |

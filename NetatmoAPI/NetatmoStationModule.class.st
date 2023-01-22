@@ -1,6 +1,8 @@
 Class {
 	#name : #NetatmoStationModule,
 	#superclass : #NetatmoDevice,
+	#traits : 'TNetatmoDashboard',
+	#classTraits : 'TNetatmoDashboard classTrait',
 	#instVars : [
 		'batteryPercent',
 		'lastMessageDateTime',
@@ -10,6 +12,21 @@ Class {
 	],
 	#category : #'NetatmoAPI-Model'
 }
+
+{ #category : #printing }
+NetatmoStationModule class >> batteryStatusDescription: aValue [
+
+	aValue ifNil:[ ^ 'Unknown' ].
+
+	aValue >= 6000 ifTrue: [ ^ 'Max' ].
+	aValue >= 5500 ifTrue: [ ^ 'Full' ].
+	aValue >= 5000 ifTrue: [ ^ 'High' ].
+	aValue >= 4500 ifTrue: [ ^ 'Medium' ].
+	aValue >= 4000 ifTrue: [ ^ 'Low' ].
+	aValue < 4000 ifTrue: [ ^ 'Very low' ].
+
+	^ 'Unknown'
+]
 
 { #category : #accessing }
 NetatmoStationModule class >> product [
@@ -50,16 +67,7 @@ NetatmoStationModule >> batteryStatus: anObject [
 { #category : #printing }
 NetatmoStationModule >> batteryStatusDescription [
 
-	| status |
-	status := self batteryStatus.
-	status >= 6000 ifTrue: [ ^ 'Max' ].
-	status >= 5500 ifTrue: [ ^ 'Full' ].
-	status >= 5000 ifTrue: [ ^ 'High' ].
-	status >= 4500 ifTrue: [ ^ 'Medium' ].
-	status >= 4000 ifTrue: [ ^ 'Low' ].
-	status < 4000 ifTrue: [ ^ 'Very low' ].
-
-	^ 'Unknown'
+	^ self class batteryStatusDescription: self batteryStatus
 ]
 
 { #category : #testing }

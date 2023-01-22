@@ -47,6 +47,7 @@ NetatmoAPI >> buildDevices: aDictionary [
 			
 			"Build specific devices properties"
 			device isStation ifTrue:[self populateStation: device withRawDatas: rawDevice].
+			device isHealthyHomeCoach ifTrue:[self populateHealthyHomeCoach: device withRawDatas: rawDevice].
 			
 			devices add: device.	
 		].
@@ -56,18 +57,20 @@ NetatmoAPI >> buildDevices: aDictionary [
 ]
 
 { #category : #private }
-NetatmoAPI >> buildMeasures: aDictionary forDataType: aDataType [
-	| measures rawMeasures unit |
+NetatmoAPI >> buildMeasures: aDictionary forType: aMeasureType [
+	| measures rawMeasures unit dataType |
 	
 	measures := SortedCollection sortBlock:[ :a :b | a dateTime < b dateTime ].
 	rawMeasures := aDictionary at: #body ifAbsent:[ ^ measures ].
-	unit := NetatmoDataTypeEnum defaultUnitForDataType: aDataType.
+	unit := NetatmoMeasureType defaultUnit: aMeasureType.
+	dataType := NetatmoMeasureType defaultDataType: aMeasureType.
 	
 	rawMeasures keysAndValuesDo: [ :timestamp :datas | | measure |
 		measure := NetatmoMeasure new.
 		measure dateTime: (DateAndTime fromUnixTime: timestamp asInteger).
-		measure type: aDataType.
+		measure type: aMeasureType.
 		measure data: datas first.
+		measure dataType: dataType.
 		measure unit: unit.
 		
 		measures add: measure.	
@@ -106,6 +109,17 @@ NetatmoAPI >> checkIfZnClientError [
 	error messageText: statusLine reason.
 	
 	^ error
+]
+
+{ #category : #'api - devices' }
+NetatmoAPI >> getDevices [
+	"Return all availables devices"
+	
+	| devices |
+	devices := OrderedCollection new.
+	devices addAll: self getStationDevices.
+	devices addAll: self getHealthyHomeCoachDevices.
+	^ devices
 ]
 
 { #category : #'api - devices' }
@@ -174,7 +188,7 @@ NetatmoAPI >> getMeasures: aDeviceId module: aModuleId scale: aDuration types: a
 		
 		(self checkIfError: result) ifNotNil:[ :error | ^ error signal ].
 		
-		measures addAll: ((self buildMeasures: result forDataType: type) ifNil:[OrderedCollection new]).
+		measures addAll: ((self buildMeasures: result forType: type) ifNil:[OrderedCollection new]).
 	].
 
 	^ measures
@@ -267,12 +281,134 @@ NetatmoAPI >> initialize [
 	znClient := ZnClient new.
 ]
 
-{ #category : #private }
+{ #category : #'private - healthy home coach' }
+NetatmoAPI >> populateHealthyHomeCoach: device withRawDatas: rawDevice [
+	"Populate a healthy home coach with specific datas from a raw data source"
+	
+	| name |
+	"The HHC name is store in a specific property"
+	name := rawDevice at: 'station_name' ifPresent:[ :e | e asString ] ifAbsent:[ nil ].
+	(name notNil and:[name notEmpty ]) ifTrue:[device name: name].
+
+	self populateHealthyHomeCoachDashboard: device withRawDatas: rawDevice.
+]
+
+{ #category : #'private - healthy home coach' }
+NetatmoAPI >> populateHealthyHomeCoachDashboard: device withRawDatas: rawDevice [
+	"Populate a healthy home coach dashboard"
+	| rawDashboard cleanRawDashboard time measure |
+	
+	rawDashboard := rawDevice at: 'dashboard_data' ifAbsent:[ ^ self ].
+
+	"Create dashboard measures"
+	cleanRawDashboard := rawDashboard copy.
+	time := rawDashboard at: 'time_utc' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ nil ].
+	cleanRawDashboard removeKey: 'time_utc' ifAbsent: [ "do nothing" ].
+		
+	device dashboardDateTime: time.
+		
+	"Manual creation of min and max temp"
+	cleanRawDashboard at: 'min_temp' ifPresent:[ | date value |
+			
+		date := cleanRawDashboard at: 'date_min_temp' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ nil ].
+		cleanRawDashboard removeKey: 'date_min_temp' ifAbsent: [ "do nothing" ].
+		value := cleanRawDashboard at: 'min_temp' ifPresent:[ :e | e ] ifAbsent:[ nil ].
+		cleanRawDashboard removeKey: 'min_temp' ifAbsent: [ "do nothing" ].
+		measure := NetatmoMeasure new dateTime: date; type: NetatmoMeasureType minTemperature; data: value; dataType: (NetatmoMeasureType defaultDataType: NetatmoMeasureType minTemperature); unit: (NetatmoMeasureType defaultUnit: NetatmoMeasureType minTemperature).
+		device dashboardMeasures add: measure.
+	].
+	
+	cleanRawDashboard at: 'max_temp' ifPresent:[ | date value |
+			
+		date := cleanRawDashboard at: 'date_max_temp' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ nil ].
+		cleanRawDashboard removeKey: 'date_max_temp' ifAbsent: [ "do nothing" ].
+		value := cleanRawDashboard at: 'max_temp' ifPresent:[ :e | e ] ifAbsent:[ nil ].
+		cleanRawDashboard removeKey: 'max_temp' ifAbsent: [ "do nothing" ].
+		measure := NetatmoMeasure new dateTime: date; type: NetatmoMeasureType maxTemperature; data: value; dataType: (NetatmoMeasureType defaultDataType: NetatmoMeasureType maxTemperature); unit: (NetatmoMeasureType defaultUnit: NetatmoMeasureType maxTemperature).
+		device dashboardMeasures add: measure.
+	].
+		
+	cleanRawDashboard keysAndValuesDo: [ :k :v | | measureType |
+			
+		measureType := NetatmoMeasureType fromString: k.
+		measureType ifNotNil:[
+			measure := NetatmoMeasure new 
+				dateTime: time; 
+				type: measureType; 
+				data: v; 
+				dataType: (NetatmoMeasureType defaultDataType: measureType); 
+				unit: (NetatmoMeasureType defaultUnit: measureType).
+				
+			device dashboardMeasures add: measure.
+		].
+	].
+]
+
+{ #category : #'private - station' }
 NetatmoAPI >> populateStation: device withRawDatas: rawDevice [
-	"Populate a station with station datas from a raw data source"
+	"Populate a station with specific datas from a raw data source"
+	
+	self populateStationDashboard: device withRawDatas: rawDevice.
+	self populateStationModules: device withRawDatas: rawDevice.
+]
+
+{ #category : #'private - station' }
+NetatmoAPI >> populateStationDashboard: device withRawDatas: rawDevice [
+	"Populate a station dashboard"
+	| rawDashboard cleanRawDashboard time measure |
+	
+	rawDashboard := rawDevice at: 'dashboard_data' ifAbsent:[ ^ self ].
+
+	"Create dashboard measures"
+	cleanRawDashboard := rawDashboard copy.
+	time := rawDashboard at: 'time_utc' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ nil ].
+	cleanRawDashboard removeKey: 'time_utc' ifAbsent: [ "do nothing" ].
+		
+	device dashboardDateTime: time.
+		
+	"Manual creation of min and max temp"
+	cleanRawDashboard at: 'min_temp' ifPresent:[ | date value |
+			
+		date := cleanRawDashboard at: 'date_min_temp' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ nil ].
+		cleanRawDashboard removeKey: 'date_min_temp' ifAbsent: [ "do nothing" ].
+		value := cleanRawDashboard at: 'min_temp' ifPresent:[ :e | e ] ifAbsent:[ nil ].
+		cleanRawDashboard removeKey: 'min_temp' ifAbsent: [ "do nothing" ].
+		measure := NetatmoMeasure new dateTime: date; type: NetatmoMeasureType minTemperature; data: value; dataType: (NetatmoMeasureType defaultDataType: NetatmoMeasureType minTemperature); unit: (NetatmoMeasureType defaultUnit: NetatmoMeasureType minTemperature).
+		device dashboardMeasures add: measure.
+	].
+	
+	cleanRawDashboard at: 'max_temp' ifPresent:[ | date value |
+			
+		date := cleanRawDashboard at: 'date_max_temp' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ nil ].
+		cleanRawDashboard removeKey: 'date_max_temp' ifAbsent: [ "do nothing" ].
+		value := cleanRawDashboard at: 'max_temp' ifPresent:[ :e | e ] ifAbsent:[ nil ].
+		cleanRawDashboard removeKey: 'max_temp' ifAbsent: [ "do nothing" ].
+		measure := NetatmoMeasure new dateTime: date; type: NetatmoMeasureType maxTemperature; data: value; dataType: (NetatmoMeasureType defaultDataType: NetatmoMeasureType maxTemperature); unit: (NetatmoMeasureType defaultUnit: NetatmoMeasureType maxTemperature).
+		device dashboardMeasures add: measure.
+	].
+		
+	cleanRawDashboard keysAndValuesDo: [ :k :v | | measureType |
+			
+		measureType := NetatmoMeasureType fromString: k.
+		measureType ifNotNil:[
+			measure := NetatmoMeasure new 
+				dateTime: time; 
+				type: measureType; 
+				data: v; 
+				dataType: (NetatmoMeasureType defaultDataType: measureType); 
+				unit: (NetatmoMeasureType defaultUnit: measureType).
+				
+			device dashboardMeasures add: measure.
+		].
+	].
+]
+
+{ #category : #'private - station' }
+NetatmoAPI >> populateStationModules: device withRawDatas: rawDevice [
+	"Populate a station with specific datas from a raw data source"
 	
 	| modules list |
-	"Search for mpdules"
+	"Search for modules"
 	modules := OrderedCollection new.
 	list := rawDevice at: #modules ifAbsent:[OrderedCollection new].
 	list do:[ :object |

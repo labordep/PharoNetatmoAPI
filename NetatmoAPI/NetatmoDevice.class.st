@@ -37,6 +37,18 @@ NetatmoDevice class >> type: aType [
 	^ nil
 ]
 
+{ #category : #printing }
+NetatmoDevice class >> wifiStatusSignalQuality: aValue [
+
+	aValue ifNil:[ ^ 'Unknown' ].
+
+	aValue <= 56 ifTrue: [ ^ 'Good' ].
+	(aValue > 56 and:[ aValue < 86]) ifTrue: [ ^ 'Average' ].
+	aValue >= 86 ifTrue: [ ^ 'Bad' ].
+
+	^ 'Unknown'
+]
+
 { #category : #accessing }
 NetatmoDevice >> firmware [
 	"version of the software"
@@ -186,11 +198,5 @@ NetatmoDevice >> wifiStatus: anObject [
 { #category : #printing }
 NetatmoDevice >> wifiStatusSignalQuality [
 
-	| status |
-	status := self wifiStatus.
-	status <= 56 ifTrue: [ ^ 'Good' ].
-	(status > 56 and:[ status < 86]) ifTrue: [ ^ 'Average' ].
-	status >= 86 ifTrue: [ ^ 'Bad' ].
-
-	^ 'Unknown'
+	^ self class wifiStatusSignalQuality: self wifiStatus
 ]

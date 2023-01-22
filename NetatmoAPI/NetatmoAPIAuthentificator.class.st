@@ -15,6 +15,21 @@ Class {
 	#category : #'NetatmoAPI-Core'
 }
 
+{ #category : #cleanup }
+NetatmoAPIAuthentificator class >> cleanUp [
+
+	<script>
+	self cleanUp: nil
+]
+
+{ #category : #cleanup }
+NetatmoAPIAuthentificator class >> cleanUp: anObject [
+	"Clean allocated ressources"
+	
+	self flag:'Todo : auto clean the server after authentification'.
+	self allInstancesDo:[ :e | e stopOAuth2CallbackServer ].
+]
+
 { #category : #accessing }
 NetatmoAPIAuthentificator class >> clientId: aNetatmoClientIdString clientSecret: aNetatmoClienSecretString [
 	"Danger: if you dont specify exact scopes your authentication request should be rejected"
@@ -91,13 +106,6 @@ NetatmoAPIAuthentificator >> generateRandomState [
 
 	^ (Generator on: [ :g | 
 		   1 timesRepeat: [ g yield: UUID new asString36 ] ]) upToEnd first
-]
-
-{ #category : #initialization }
-NetatmoAPIAuthentificator >> initialize [
-
-	super initialize.
-	
 ]
 
 { #category : #accessing }
@@ -203,4 +211,11 @@ NetatmoAPIAuthentificator >> scopes [
 NetatmoAPIAuthentificator >> scopes: anObject [
 
 	scopes := anObject
+]
+
+{ #category : #api }
+NetatmoAPIAuthentificator >> stopOAuth2CallbackServer [
+
+	znServer ifNotNil: [ :e | e stop ].
+	znServer := nil.
 ]

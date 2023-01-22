@@ -15,6 +15,7 @@ NetatmoMeasureTest >> testInitialize [
 	
 	self assert: measure type isNil.
 	self assert: measure data isNil.
+	self assert: measure dataType isNil.
 	self assert: measure unit isNil.
 	self assert: measure dateTime isNil.
 ]

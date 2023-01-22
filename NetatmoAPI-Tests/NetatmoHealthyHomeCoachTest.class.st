@@ -9,15 +9,15 @@ Class {
 
 { #category : #tests }
 NetatmoHealthyHomeCoachTest >> testConstructor [ 
-
-	| device |
-	device := NetatmoHealthyHomeCoach new.
-	self assert: device type equals: NetatmoHealthyHomeCoach type.
-	self assert: device product equals: NetatmoHealthyHomeCoach product.
-	self assert: device isHealthyHomeCoach.
+	| deviceList |
 	
-	device := NetatmoDevice type: NetatmoHealthyHomeCoach type.
-	self assert: device type equals: NetatmoHealthyHomeCoach type.
-	self assert: device product equals: NetatmoHealthyHomeCoach product.
-	self assert: device isHealthyHomeCoach.
+	deviceList := OrderedCollection new.
+	deviceList add: NetatmoHealthyHomeCoach new.
+	deviceList add: (NetatmoDevice type: NetatmoHealthyHomeCoach type).
+	
+	deviceList do:[ :device |
+		self assert: device type equals: NetatmoHealthyHomeCoach type.
+		self assert: device product equals: NetatmoHealthyHomeCoach product.
+		self assert: device isHealthyHomeCoach.
+	].
 ]
