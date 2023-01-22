@@ -86,6 +86,15 @@ api token: 'yourAccess|tokenHere'
 
 Use "api" category methods to request datas.
 
+### Get availables devices
+
+Get all devices, return a list of ```NetatmoDevice```. The list can change depending session authorization. 
+
+```smalltalk
+| devices |
+devices := api getDevices.
+```
+
 ### Get Weather station datas
 
 Get all device, return a list of ```NetatmoStation``` devices.
@@ -121,15 +130,15 @@ devices := api getHealthyHomeCoachDevice: '01:23:45:67:89:ab'.
 ### Get measures from a device
 
 Use the API to get measure from a device, return a list of ```NetatmoMeasure``` measures. 
-Each ```NetatmoMeasure``` contains data (for example 56), type (for example humidity), unit (for example '%') and date time of the measure.
-Use ```types:``` to choose data type with ```NetatmoDataTypeEnum``` enums.
+Each ```NetatmoMeasure``` contains data (for example ```56```), type (for example ```'humidity'```), unit (for example ```'%'```), data unit (for example ```Number```) and a ```DateTime``` of the measure.
+When requested a measure from the API use ```types:``` to choose data type by passing a list of ```NetatmoMeasureType```.
 
 Get one type of data from a device.
 
 ```smalltalk
 | measures |
 measures := api getMeasures: (device id) 
-                types: NetatmoDataTypeEnum humidity.
+                types: NetatmoMeasureType humidity.
 ```
 
 Get multiples types of data from a device.
@@ -138,17 +147,17 @@ Get multiples types of data from a device.
 | measures |
 measures := api getMeasures: (device id) 
                 types: (OrderedCollection 
-                           with: NetatmoDataTypeEnum temperature 
-                           with: NetatmoDataTypeEnum humidity).
+                           with: NetatmoMeasureType temperature 
+                           with: NetatmoMeasureType humidity).
 ```
 
-Is it possible to request a date time interval of measure, with a scale for the sample.
+It is possible to request a date time interval of measure, with a scale for the sample.
 Example : get temperature each days at the current time in the last week.
 
 ```smalltalk
 | measures |
 measures := api getMeasures: (device id) 
-                types: NetatmoDataTypeEnum temperature 
+                types: NetatmoMeasureType temperature 
                 scale: 1 day 
                 dateTimeBegin: (DateAndTime now - 7 day) 
                 dateTimeEnd: DateAndTime now.
