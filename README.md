@@ -1,5 +1,7 @@
 # Pharo Netatmo API
 
+![image](https://user-images.githubusercontent.com/49183340/215271343-913354fa-5616-451c-914d-f34825c64078.png)
+
 Pharo Netatmo API implementation for Legrand Netatmo products.
 
 ## Connexion and OAuth2 authentication
