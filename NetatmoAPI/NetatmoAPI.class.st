@@ -355,14 +355,53 @@ NetatmoAPI >> populateHealthyHomeCoachDashboard: device withRawDatas: rawDevice 
 NetatmoAPI >> populateStation: device withRawDatas: rawDevice [
 	"Populate a station with specific datas from a raw data source"
 	
-	self populateStationDashboard: device withRawDatas: rawDevice.
+	self populateStationOrModuleDashboard: device withRawDatas: rawDevice.
 	self populateStationModules: device withRawDatas: rawDevice.
 ]
 
 { #category : #'private - station' }
-NetatmoAPI >> populateStationDashboard: device withRawDatas: rawDevice [
+NetatmoAPI >> populateStationModules: device withRawDatas: rawDevice [
+	"Populate a station with specific datas from a raw data source"
+	
+	| modules list |
+	"Search for modules"
+	modules := OrderedCollection new.
+	list := rawDevice at: #modules ifAbsent:[OrderedCollection new].
+	list do:[ :object |
+		(object isKindOf: Dictionary) 
+			ifTrue:[modules addAll: (object at: #oneOf ifAbsent:[OrderedCollection new])]
+			ifFalse:[modules add: object].
+	].
+	
+	"Create modules if necessary"
+	modules do:[ :rawModule | | module |
+		module := NetatmoDevice type: (rawModule at: #type ifAbsent:[nil]).
+		module ifNotNil:[ 
+			
+			"Build common modules properties"
+			module id: (rawModule at: '_id' ifPresent:[ :e | e asString ] ifAbsent:[ nil ]).
+			module batteryPercent: (rawModule at: 'battery_percent' ifPresent:[ :e | e asNumber ] ifAbsent:[ nil ]).
+			module batteryStatus: (rawModule at: 'battery_vp' ifPresent:[ :e | e asNumber ] ifAbsent:[ nil ]).
+			self populateStationOrModuleDashboard: module withRawDatas: rawModule.
+			"a property named data_type is exists but seems not important, all informations are already in the dashboard"
+			module firmware: (rawModule at: 'firmware' ifPresent:[ :e | e asNumber ] ifAbsent:[ nil ]).
+			module lastMessageDateTime: (rawModule at: 'last_message' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ nil ]).
+			module lastSeenDateTime: (rawModule at: 'last_seen' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ nil ]).
+			module lastSetupDateTime: (rawModule at: 'last_setup' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ nil ]).
+			module name: (rawModule at: 'module_name' ifPresent:[ :e | e asString ] ifAbsent:[ nil ]).
+			module isReachable: (rawModule at: 'reachable' ifPresent:[ :e | e ] ifAbsent:[ nil ]).
+			module radioStatus: (rawModule at: 'rf_status' ifPresent:[ :e | e asNumber ] ifAbsent:[ nil ]).
+			
+			device modules add: module.
+		].
+	].
+	
+]
+
+{ #category : #'private - station' }
+NetatmoAPI >> populateStationOrModuleDashboard: device withRawDatas: rawDevice [
 	"Populate a station dashboard"
-	| rawDashboard cleanRawDashboard time measure |
+	| rawDashboard cleanRawDashboard time measure maxWindTime |
 	
 	rawDashboard := rawDevice at: 'dashboard_data' ifAbsent:[ ^ self ].
 
@@ -393,13 +432,15 @@ NetatmoAPI >> populateStationDashboard: device withRawDatas: rawDevice [
 		measure := NetatmoMeasure new dateTime: date; type: NetatmoMeasureType maxTemperature; data: value; dataType: (NetatmoMeasureType defaultDataType: NetatmoMeasureType maxTemperature); unit: (NetatmoMeasureType defaultUnit: NetatmoMeasureType maxTemperature).
 		device dashboardMeasures add: measure.
 	].
-		
+	
+	maxWindTime := rawDashboard at: 'date_max_wind_str' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ time ].	
+	
 	cleanRawDashboard keysAndValuesDo: [ :k :v | | measureType |
-			
+		
 		measureType := NetatmoMeasureType fromString: k.
 		measureType ifNotNil:[
 			measure := NetatmoMeasure new 
-				dateTime: time; 
+				dateTime: ((measureType = NetatmoMeasureType maxWindStrength or:[measureType = NetatmoMeasureType maxWindAngle]) ifTrue:[maxWindTime] ifFalse:[time]); 
 				type: measureType; 
 				data: v; 
 				dataType: (NetatmoMeasureType defaultDataType: measureType); 
@@ -408,45 +449,6 @@ NetatmoAPI >> populateStationDashboard: device withRawDatas: rawDevice [
 			device dashboardMeasures add: measure.
 		].
 	].
-]
-
-{ #category : #'private - station' }
-NetatmoAPI >> populateStationModules: device withRawDatas: rawDevice [
-	"Populate a station with specific datas from a raw data source"
-	
-	| modules list |
-	"Search for modules"
-	modules := OrderedCollection new.
-	list := rawDevice at: #modules ifAbsent:[OrderedCollection new].
-	list do:[ :object |
-		(object isKindOf: Dictionary) 
-			ifTrue:[modules addAll: (object at: #oneOf ifAbsent:[OrderedCollection new])]
-			ifFalse:[modules add: object].
-	].
-	
-	"Create modules if necessary"
-	modules do:[ :rawModule | | module |
-		module := NetatmoDevice type: (rawModule at: #type ifAbsent:[nil]).
-		module ifNotNil:[ 
-			
-			"Build common modules properties"
-			module id: (rawModule at: '_id' ifPresent:[ :e | e asString ] ifAbsent:[ nil ]).
-			module batteryPercent: (rawModule at: 'battery_percent' ifPresent:[ :e | e asNumber ] ifAbsent:[ nil ]).
-			module batteryStatus: (rawModule at: 'battery_vp' ifPresent:[ :e | e asNumber ] ifAbsent:[ nil ]).
-			"TODO : dashboard data"
-			"TODO : data type"
-			module firmware: (rawModule at: 'firmware' ifPresent:[ :e | e asNumber ] ifAbsent:[ nil ]).
-			module lastMessageDateTime: (rawModule at: 'last_message' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ nil ]).
-			module lastSeenDateTime: (rawModule at: 'last_seen' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ nil ]).
-			module lastSetupDateTime: (rawModule at: 'last_setup' ifPresent:[ :e | DateAndTime fromUnixTime: e ] ifAbsent:[ nil ]).
-			module name: (rawModule at: 'module_name' ifPresent:[ :e | e asString ] ifAbsent:[ nil ]).
-			module isReachable: (rawModule at: 'reachable' ifPresent:[ :e | e ] ifAbsent:[ nil ]).
-			module radioStatus: (rawModule at: 'rf_status' ifPresent:[ :e | e asNumber ] ifAbsent:[ nil ]).
-			
-			device modules add: module.
-		].
-	].
-	
 ]
 
 { #category : #private }

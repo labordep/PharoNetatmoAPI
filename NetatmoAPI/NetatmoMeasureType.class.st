@@ -70,6 +70,8 @@ NetatmoMeasureType class >> allRainMeasuresTypes [
 	list add: self minRain.
 	list add: self maxRain.
 	list add: self sumRain.
+	list add: self sumRain1hour.
+	list add: self sumRain24hours.
 	^list
 ]
 
@@ -163,17 +165,34 @@ NetatmoMeasureType class >> fromString: aString [
 	cleanedString := aString asValidSelector asLowercase.
 	cleanedString isEmpty ifTrue:[ ^ nil ].
 	
-	self co2 asValidSelector asLowercase = cleanedString ifTrue:[ ^ self co2 ].
-	self humidity asValidSelector asLowercase = cleanedString ifTrue:[ ^ self humidity ].
-	self absolutePressure asValidSelector asLowercase = cleanedString ifTrue:[ ^ self absolutePressure ].
 	self temperature asValidSelector asLowercase = cleanedString ifTrue:[ ^ self temperature ].
-	self pressure asValidSelector asLowercase = cleanedString ifTrue:[ ^ self pressure ].
-	self noise asValidSelector asLowercase = cleanedString ifTrue:[ ^ self noise ].
 	self maxTemperature asValidSelector asLowercase = cleanedString ifTrue:[ ^ self maxTemperature ].
 	self minTemperature asValidSelector asLowercase = cleanedString ifTrue:[ ^ self minTemperature ].
+		
+	self humidity asValidSelector asLowercase = cleanedString ifTrue:[ ^ self humidity ].
+	
+	self co2 asValidSelector asLowercase = cleanedString ifTrue:[ ^ self co2 ].
+		
+	self absolutePressure asValidSelector asLowercase = cleanedString ifTrue:[ ^ self absolutePressure ].
+	self pressure asValidSelector asLowercase = cleanedString ifTrue:[ ^ self pressure ].
+	
+	self noise asValidSelector asLowercase = cleanedString ifTrue:[ ^ self noise ].
+	
 	self health asValidSelector asLowercase = cleanedString ifTrue:[ ^ self health ].
+	
 	self temperatureTrend asValidSelector asLowercase = cleanedString ifTrue:[ ^ self temperatureTrend ].
 	self pressureTrend asValidSelector asLowercase = cleanedString ifTrue:[ ^ self pressureTrend ].
+	
+	self rain asValidSelector asLowercase = cleanedString ifTrue:[ ^ self rain ].
+	self sumRain1hour asValidSelector asLowercase = cleanedString ifTrue:[ ^ self sumRain1hour ].
+	self sumRain24hours asValidSelector asLowercase = cleanedString ifTrue:[ ^ self sumRain24hours ].
+	
+	self windStrength asValidSelector asLowercase = cleanedString ifTrue:[ ^ self windStrength ].
+	self windAngle asValidSelector asLowercase = cleanedString ifTrue:[ ^ self windAngle ].
+	self gustStrength asValidSelector asLowercase = cleanedString ifTrue:[ ^ self gustStrength ].
+	self gustAngle asValidSelector asLowercase = cleanedString ifTrue:[ ^ self gustAngle ].
+	self maxWindAngle asValidSelector asLowercase = cleanedString ifTrue:[ ^ self maxWindAngle ].
+	self maxWindStrength asValidSelector asLowercase = cleanedString ifTrue:[ ^ self maxWindStrength ].
 	
 	^ nil
 ]
@@ -251,6 +270,18 @@ NetatmoMeasureType class >> maxRain [
 NetatmoMeasureType class >> maxTemperature [
 
 	^'max_temp'
+]
+
+{ #category : #wind }
+NetatmoMeasureType class >> maxWindAngle [ 
+
+	^'max_wind_angle'
+]
+
+{ #category : #wind }
+NetatmoMeasureType class >> maxWindStrength [ 
+
+	^'max_wind_str'
 ]
 
 { #category : #C02 }
@@ -333,6 +364,18 @@ NetatmoMeasureType class >> stationMeasuresTypes [
 NetatmoMeasureType class >> sumRain [ 
 
 	^'sum_rain'
+]
+
+{ #category : #rain }
+NetatmoMeasureType class >> sumRain1hour [ 
+
+	^'sum_rain_1'
+]
+
+{ #category : #rain }
+NetatmoMeasureType class >> sumRain24hours [ 
+
+	^'sum_rain_24'
 ]
 
 { #category : #temperature }

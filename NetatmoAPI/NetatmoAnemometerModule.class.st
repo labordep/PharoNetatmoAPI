@@ -31,6 +31,54 @@ NetatmoAnemometerModule class >> type [
 	^ 'NAModule2' 
 ]
 
+{ #category : #dashboard }
+NetatmoAnemometerModule >> dashboardGustAngle [
+
+	^ self dashboardMeasures detect:[ :e | e type = NetatmoMeasureType gustAngle ] ifNone:[ nil ]
+
+	
+]
+
+{ #category : #dashboard }
+NetatmoAnemometerModule >> dashboardGustStrength [
+
+	^ self dashboardMeasures detect:[ :e | e type = NetatmoMeasureType gustStrength ] ifNone:[ nil ]
+
+	
+]
+
+{ #category : #dashboard }
+NetatmoAnemometerModule >> dashboardMaxWindAngle [
+
+	^ self dashboardMeasures detect:[ :e | e type = NetatmoMeasureType maxWindAngle ] ifNone:[ nil ]
+
+	
+]
+
+{ #category : #dashboard }
+NetatmoAnemometerModule >> dashboardMaxWindStrength [
+
+	^ self dashboardMeasures detect:[ :e | e type = NetatmoMeasureType maxWindStrength ] ifNone:[ nil ]
+
+	
+]
+
+{ #category : #dashboard }
+NetatmoAnemometerModule >> dashboardWindAngle [
+
+	^ self dashboardMeasures detect:[ :e | e type = NetatmoMeasureType windAngle ] ifNone:[ nil ]
+
+	
+]
+
+{ #category : #dashboard }
+NetatmoAnemometerModule >> dashboardWindStrength [
+
+	^ self dashboardMeasures detect:[ :e | e type = NetatmoMeasureType windStrength ] ifNone:[ nil ]
+
+	
+]
+
 { #category : #testing }
 NetatmoAnemometerModule >> isAnemometerModule [
 

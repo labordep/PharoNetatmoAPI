@@ -228,6 +228,42 @@ NetatmoAPIExamples class >> stationDashboardExample [
 ]
 
 { #category : #'Examples - API uses with Spec' }
+NetatmoAPIExamples class >> stationIndoorModuleDashboardExample [
+	"Display a dashboard of a station indoor module"
+	"This example works only if your have a station device with an indoor module ;-)"
+	<script>
+	
+	| api devices table measures window station module |
+	api := self getCurrentConnectedNetatmoAPI ifNil:[ ^ self ].
+	
+	devices := api getStationDevices.
+	(devices isNil or:[devices isEmpty]) ifTrue:[ ^ self ].
+	station := devices first.
+	module := station indoorModules ifEmpty: [ ^ self ] ifNotEmpty: [ :e | e first ].	
+	measures := module dashboardMeasures.
+	
+	table := SpTablePresenter new
+		addColumn: (SpStringTableColumn new
+			evaluated: [ :measure | 
+				"Build data presentation string"
+				measure type = NetatmoMeasureType minTemperature ifTrue:[
+					measure type asString, ': ', measure data asString, ' ', measure unit asString, ' (' , measure dateTime asString , ')'.
+				] ifFalse:[
+					measure type = NetatmoMeasureType maxTemperature ifTrue:[
+						measure type asString, ': ', measure data asString, ' ', measure unit asString, ' (' , measure dateTime asString , ')'.
+					] ifFalse:[
+						measure type asString, ': ', measure data asString, ' ', (measure unit ifNil:['']) asString.
+					].
+				].
+			];
+			displayBold: [ :e | true ]).
+	(measures notNil and:[measures notEmpty]) ifTrue:[table items: measures].
+	
+	window := table open.
+	window title: ('Module "', module name asString, '" Dashboard - ', station dashboardDateTime asString).
+]
+
+{ #category : #'Examples - API uses with Spec' }
 NetatmoAPIExamples class >> stationLast7DaysMeasuresExample [
 	"Display device measures in a table"
 	"This example works only if your have a station device ;-)"
@@ -254,6 +290,42 @@ NetatmoAPIExamples class >> stationLast7DaysMeasuresExample [
 	
 	window := table open.
 	window title: 'Last 7 days indoor station measures'.
+]
+
+{ #category : #'Examples - API uses with Spec' }
+NetatmoAPIExamples class >> stationOutdoorModuleDashboardExample [
+	"Display a dashboard of a station outdoor module"
+	"This example works only if your have a station device with an outdoor module ;-)"
+	<script>
+	
+	| api devices table measures window station module |
+	api := self getCurrentConnectedNetatmoAPI ifNil:[ ^ self ].
+	
+	devices := api getStationDevices.
+	(devices isNil or:[devices isEmpty]) ifTrue:[ ^ self ].
+	station := devices first.
+	module := station outdoorModules ifEmpty: [ ^ self ] ifNotEmpty: [ :e | e first ].	
+	measures := module dashboardMeasures.
+	
+	table := SpTablePresenter new
+		addColumn: (SpStringTableColumn new
+			evaluated: [ :measure | 
+				"Build data presentation string"
+				measure type = NetatmoMeasureType minTemperature ifTrue:[
+					measure type asString, ': ', measure data asString, ' ', measure unit asString, ' (' , measure dateTime asString , ')'.
+				] ifFalse:[
+					measure type = NetatmoMeasureType maxTemperature ifTrue:[
+						measure type asString, ': ', measure data asString, ' ', measure unit asString, ' (' , measure dateTime asString , ')'.
+					] ifFalse:[
+						measure type asString, ': ', measure data asString, ' ', (measure unit ifNil:['']) asString.
+					].
+				].
+			];
+			displayBold: [ :e | true ]).
+	(measures notNil and:[measures notEmpty]) ifTrue:[table items: measures].
+	
+	window := table open.
+	window title: ('Module "', module name asString, '" Dashboard - ', station dashboardDateTime asString).
 ]
 
 { #category : #'Examples - API uses with Roassal' }

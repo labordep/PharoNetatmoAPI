@@ -455,6 +455,28 @@ NetatmoAPITest >> testBuildStationDevicesModules [
 	self assert: module1 lastSeenDateTime equals: (DateAndTime fromUnixTime: 1555677746).
 	self assert: module1 radioStatus equals: 31.
 	
+	"Test device dashboard measures"
+	self assert: module1 haveDashboardMeasures.
+	self assert: module1 dashboardMeasures size equals: 8.
+	self assert: module1 dashboardDateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	
+	self assert: module1 dashboardMinTemperature data equals: 21.2.
+	self assert: module1 dashboardMinTemperature dateTime equals: (DateAndTime fromUnixTime: 1555631374).
+	self assert: module1 dashboardMaxTemperature data equals: 27.4.
+	self assert: module1 dashboardMaxTemperature dateTime equals: (DateAndTime fromUnixTime: 1555662436).
+	self assert: module1 dashboardCO2 data equals: 967.
+	self assert: module1 dashboardCO2 dateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	self assert: module1 dashboardHumidity data equals: 41.
+	self assert: module1 dashboardHumidity dateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	self assert: module1 dashboardAbsolutePressure data equals: 1017.4.
+	self assert: module1 dashboardAbsolutePressure dateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	self assert: module1 dashboardTemperature data equals: 23.7.
+	self assert: module1 dashboardTemperature dateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	self assert: module1 dashboardPressure data equals: 997.6.
+	self assert: module1 dashboardPressure dateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	self assert: module1 dashboardTemperatureTrend data equals: 'up'.
+	self assert: module1 dashboardTemperatureTrend dateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	
 	module2 := device modules at: 2.
 	"Device properties"
 	self assert: module2 isStation not.
@@ -476,6 +498,21 @@ NetatmoAPITest >> testBuildStationDevicesModules [
 	self assert: module2 lastMessageDateTime equals: (DateAndTime fromUnixTime: 1555677746).
 	self assert: module2 lastSeenDateTime equals: (DateAndTime fromUnixTime: 1555677746).
 	self assert: module2 radioStatus equals: 31.
+	"Test each dashboard measures"
+	self assert: module2 haveDashboardMeasures.
+	self assert: module2 dashboardMeasures size equals: 5.
+	self assert: module2 dashboardDateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	
+	self assert: module2 dashboardMinTemperature data equals: 21.2.
+	self assert: module2 dashboardMinTemperature dateTime equals: (DateAndTime fromUnixTime: 1555631374).
+	self assert: module2 dashboardMaxTemperature data equals: 27.4.
+	self assert: module2 dashboardMaxTemperature dateTime equals: (DateAndTime fromUnixTime: 1555662436).
+	self assert: module2 dashboardHumidity data equals: 41.
+	self assert: module2 dashboardHumidity dateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	self assert: module2 dashboardTemperature data equals: 23.7.
+	self assert: module2 dashboardTemperature dateTime equals: (DateAndTime fromUnixTime: 1555677739).
+	self assert: module2 dashboardTemperatureTrend data equals: 'up'.
+	self assert: module2 dashboardTemperatureTrend dateTime equals: (DateAndTime fromUnixTime: 1555677739).
 	
 	module3 := device modules at: 3.
 	"Device properties"
@@ -498,6 +535,17 @@ NetatmoAPITest >> testBuildStationDevicesModules [
 	self assert: module3 lastMessageDateTime equals: (DateAndTime fromUnixTime: 1555677746).
 	self assert: module3 lastSeenDateTime equals: (DateAndTime fromUnixTime: 1555677746).
 	self assert: module3 radioStatus equals: 31.
+	"Test each dashboard measures"
+	self assert: module3 haveDashboardMeasures.
+	self assert: module3 dashboardMeasures size equals: 3.
+	self assert: module3 dashboardDateTime equals: (DateAndTime fromUnixTime: 1555677734).
+	
+	self assert: module3 dashboardRain data equals: 0.
+	self assert: module3 dashboardRain dateTime equals: (DateAndTime fromUnixTime: 1555677734).
+	self assert: module3 dashboardSumRain1hour data equals: 0.
+	self assert: module3 dashboardSumRain1hour dateTime equals: (DateAndTime fromUnixTime: 1555677734).
+	self assert: module3 dashboardSumRain24hours data equals: 0.
+	self assert: module3 dashboardSumRain24hours dateTime equals: (DateAndTime fromUnixTime: 1555677734).
 	
 	module4 := device modules at: 4.
 	"Device properties"
@@ -520,6 +568,23 @@ NetatmoAPITest >> testBuildStationDevicesModules [
 	self assert: module4 lastMessageDateTime equals: (DateAndTime fromUnixTime: 1555677746).
 	self assert: module4 lastSeenDateTime equals: (DateAndTime fromUnixTime: 1555677746).
 	self assert: module4 radioStatus equals: 31.
+	"Test each dashboard measures"
+	self assert: module4 haveDashboardMeasures.
+	self assert: module4 dashboardMeasures size equals: 6.
+	self assert: module4 dashboardDateTime equals: (DateAndTime fromUnixTime: 1555677734).
+	
+	self assert: module4 dashboardMaxWindStrength data equals: 4.
+	self assert: module4 dashboardMaxWindStrength dateTime equals: (DateAndTime fromUnixTime: 1555673190).
+	self assert: module4 dashboardMaxWindAngle data equals: 100.
+	self assert: module4 dashboardMaxWindAngle dateTime equals: (DateAndTime fromUnixTime: 1555673190).
+	self assert: module4 dashboardGustStrength data equals: 3.
+	self assert: module4 dashboardGustStrength dateTime equals: (DateAndTime fromUnixTime: 1555677734).
+	self assert: module4 dashboardGustAngle data equals: 75.
+	self assert: module4 dashboardGustAngle dateTime equals: (DateAndTime fromUnixTime: 1555677734).
+	self assert: module4 dashboardWindStrength data equals: 2.
+	self assert: module4 dashboardWindStrength dateTime equals: (DateAndTime fromUnixTime: 1555677734).
+	self assert: module4 dashboardWindAngle data equals: 75.
+	self assert: module4 dashboardWindAngle dateTime equals: (DateAndTime fromUnixTime: 1555677734).
 ]
 
 { #category : #tests }
