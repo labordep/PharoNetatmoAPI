@@ -4,6 +4,10 @@
 
 Pharo Netatmo API implementation for Legrand Netatmo products.
 
+Supported products :
+- Weather station products
+- Healthy HomeCoach / Aircare product
+
 ## Connexion and OAuth2 authentication
 
 You cannot access data directly from the devices : Netatmo not provide that for the moment. The only way to access the data and the devices is via Netatmo servers. You need to be connected to Internet to get datas from your devices.
