@@ -214,3 +214,9 @@ More specific produtcs API :
 ### Healthy HomeCoach / Aircare product
 
 [Netatmo Aircare API Documentation](https://dev.netatmo.com/apidocumentation/aircare)
+
+## Licence
+
+This project is a personnal work, I'm not affilied with Legrand.
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
